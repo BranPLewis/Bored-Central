@@ -37,9 +37,47 @@ nav {
   margin-left: 50px;
 }
 
-img {
+.hotbar_button {
   height: 36px;
   width: 36px;
   margin-top: 36px;
   margin-left: 6rem;
+  box-sizing: border-box;
+}
+
+.hotbar_button:hover {
+  background-color: grey;
+}
+
+.hotbar {
+  margin-top: 6rem;
+  margin-right: 8px;
+  height: 24rem;
+  background-color: rgb(255, 208, 0);
+  box-shadow: 20px 5px 30px rgb(0, 0, 0);
+  width: 240px;
+  position: absolute;
+  border-radius: 20px 20px 20px 4rem;
+}
+
+.joystick {
+  height: 80px;
+  width: 80px;
+}
+
+.hotbar_top {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.hotbar_search {
+  border-radius: 20px;
+  height: 2rem;
+}
+
+.exit_hotbar {
+  font-size: 24px;
+  margin-right: 10px;
 }
