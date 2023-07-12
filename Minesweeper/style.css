@@ -91,3 +91,25 @@ nav {
 .exit_hotbar:hover {
   cursor: pointer;
 }
+
+#board {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  background-color: grey;
+  border: 1px solid black;
+}

@@ -20,7 +20,7 @@
             <div class="hotbar" v-show="hotbarOn">
                 <div class='hotbar_top'>
                     <input class="hotbar_search"></input>
-                    <div class="exit_hotbar">X</div>
+                    <div @click='hotbarOff()' class="exit_hotbar">X</div>
                 </div>
             </div>
         </nav>
