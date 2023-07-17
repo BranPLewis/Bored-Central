@@ -92,9 +92,15 @@ nav {
   cursor: pointer;
 }
 
+.column {
+  background-color: white;
+}
+
 #board {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .row {
@@ -112,4 +118,37 @@ nav {
   width: 32px;
   background-color: grey;
   border: 1px solid black;
+}
+
+.clicked {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+}
+
+.mine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  background-image: url("mine.png");
+  background-size: 32px;
+  background-position: center;
+  border: 1px solid black;
+}
+
+.websocket {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.gameOverObject {
+  height: 40px;
+  width: 40px;
+  background-color: black;
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Minesweeper</title>
+</head>
+
+<body>
+    <div id="app">
+        <nav>
+            <div class="navigation">
+                <div class="title">Bored-Central</div>
+                <img class="hotbar_button" @click="toggle_hotbar()" src="menu.png" alt="controller">
+            </div>
+            <div class="hotbar" v-show="hotbarOn">
+                <div class='hotbar_top'>
+                    <input class="hotbar_search"></input>
+                    <div @click='hotbarOff()' class="exit_hotbar">X</div>
+                </div>
+            </div>
+        </nav>
+        <div id="board">
+            <div class="column" v-for="col in tiles">
+                <div class="row" v-for="row in col">
+                    <div
+                    @click="generateMines(row, this.Beginner), tile_click(row, this.Beginner)"
+                    v-bind:class="row.class"
+                    >{{row.number}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="gameOverObject" v-show="gameOver">Game Over</div>
+        <div class="websocket">
+            <input type="text" v-model="HTTPmessage">
+            <button @click="HTTPtest()">Send Test http Post</button>
+
+            <input type="text" v-model="Socketmessage">
+            <button @click="SocketTest()">Send Socket Test</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
