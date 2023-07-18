@@ -32,8 +32,15 @@
                     >{{row.number}}</div>
                 </div>
             </div>
+            <div class="diffBox">
+                <div class="diff" @click="changeDifficultytoBeginner()">Beginner</div>
+                <div class="diff" @click="changeDifficultytoIntermediate()">Intermediate</div>
+                <div class="diff" @click="changeDifficultytoHard()">Hard</div>
+            </div>
         </div>
-        <div class="gameOverObject" v-show="gameOver">Game Over</div>
+        <div class="gameStatus">
+            <div class="gameOverObject" v-show="gameOver">Game Over</div>
+        </div>
         <div class="websocket">
             <input type="text" v-model="HTTPmessage">
             <button @click="HTTPtest()">Send Test http Post</button>

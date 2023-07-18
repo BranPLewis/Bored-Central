@@ -16,6 +16,7 @@ Vue.createApp({
         row: 16,
         mines: 99,
       },
+      activeDifficulty: [this.Beginner],
       board_size: 64,
       board_height: 8,
       board_width: 8,
@@ -30,213 +31,22 @@ Vue.createApp({
     };
   },
   methods: {
-    click: function (row, difficulty) {
-      var diff = difficulty;
-      row.class = "clicked";
-      // Start with the Cross with out of bounds check
-      //
-      // Right of the cross
-      if (row.col + 1 <= diff.col - 1) {
-        if (this.tiles[row.col + 1][row.row].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Bottom of the cross
-      if (row.row + 1 <= diff.row - 1) {
-        if (this.tiles[row.col][row.row + 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Left of the cross
-      if (row.col - 1 >= 0) {
-        if (this.tiles[row.col - 1][row.row].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Top of the cross
-      if (row.row - 1 >= 0) {
-        if (this.tiles[row.col][row.row - 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      //Do the corners next
-      //
-      // Bottom Right
-      if (row.col + 1 <= diff.col - 1 && row.row + 1 <= diff.row - 1) {
-        if (this.tiles[row.col + 1][row.row + 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Bottom Left
-      if (row.col - 1 >= 0 && row.row + 1 <= diff.row - 1) {
-        if (this.tiles[row.col - 1][row.row + 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Top Left
-      if (row.col - 1 >= 0 && row.row - 1 >= 0) {
-        if (this.tiles[row.col - 1][row.row - 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
-      // Top Right
-      if (row.col + 1 <= diff.col - 1 && row.row - 1 >= 0) {
-        if (this.tiles[row.col + 1][row.row - 1].mine == true) {
-          if (row.number == "") {
-            row.number = 1;
-          } else {
-            row.number += 1;
-          }
-        }
-      }
+    changeDifficultytoBeginner() {
+      this.activeDifficulty.shift();
+      this.activeDifficulty.push(this.Beginner);
+      console.log("Difficulty is Beginner");
     },
 
-    check: function (row, difficulty) {
-      var diff = difficulty;
-      if (row.number == "") {
-        if (row.col == diff.col - 1 && row.row == diff.row - 1) {
-          this.click(this.tiles[row.col - 1][row.row], diff);
-          this.click(this.tiles[row.col - 1][row.row - 1], diff);
-          this.click(this.tiles[row.col][row.row - 1], diff);
-          this.check(this.tiles[row.col - 1][row.row], diff);
-          this.check(this.tiles[row.col - 1][row.row - 1], diff);
-          this.check(this.tiles[row.col][row.row - 1], diff);
-          return;
-        }
-        if (row.col == diff.col - 1 && row.row == 0) {
-          this.click(this.tiles[row.col - 1][row.row], diff);
-          this.click(this.tiles[row.col - 1][row.row + 1], diff);
-          this.click(this.tiles[row.col][row.row + 1], diff);
-          this.check(this.tiles[row.col - 1][row.row], diff);
-          this.check(this.tiles[row.col - 1][row.row + 1], diff);
-          this.check(this.tiles[row.col][row.row + 1], diff);
-          return;
-        }
-        if (row.col == 0 && row.row == 0) {
-          this.click(this.tiles[row.col + 1][row.row], diff);
-          this.click(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], diff);
-          this.check(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row + 1], this.Beginner);
-          return;
-        }
-        if (row.col == 0 && row.row == diff.row - 1) {
-          this.click(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col][row.row - 1]);
-          this.click(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col][row.row - 1]);
-          this.check(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          return;
-        }
-        if (row.col == 0 && 0 < row.row && row.row < diff.row - 1) {
-          this.click(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          return;
-        }
-        if (0 < row.col && row.col < diff.col - 1 && row.row == 0) {
-          this.click(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          return;
-        }
-        if (row.col == diff.col - 1 && 0 < row.row && row.row < diff.row - 1) {
-          this.click(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          return;
-        }
-        if (0 < row.col && row.col < diff.col - 1 && row.row == diff.row - 1) {
-          this.click(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          return;
-        }
-        if (
-          0 < row.col &&
-          row.col < diff.col - 1 &&
-          0 < row.row &&
-          row.row < diff.row - 1
-        ) {
-          this.click(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.click(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.click(this.tiles[row.col + 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row + 1], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row], this.Beginner);
-          this.check(this.tiles[row.col - 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row - 1], this.Beginner);
-          this.check(this.tiles[row.col + 1][row.row], this.Beginner);
-          return;
-        }
-      } else {
-        return;
-      }
+    changeDifficultytoIntermediate() {
+      this.activeDifficulty.shift();
+      this.activeDifficulty.push(this.Intermediate);
+      console.log("Difficulty is Intermediate");
+    },
+
+    changeDifficultytoHard() {
+      this.activeDifficulty.shift();
+      this.activeDifficulty.push(this.Hard);
+      console.log("Difficulty is Hard");
     },
 
     tile_click: function (row, difficulty) {
@@ -343,121 +153,49 @@ Vue.createApp({
               }
               if (row.col == 0 && row.row == 0) {
                 this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row + 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col][row.row + 1], diff);
               }
               if (row.col == 0 && row.row == diff.row - 1) {
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(this.tiles[row.col][row.row - 1]);
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row - 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
               }
               if (row.col == 0 && 0 < row.row && row.row < diff.row - 1) {
-                this.tile_click(
-                  this.tiles[row.col][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row + 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
               }
               if (0 < row.col && row.col < diff.col - 1 && row.row == 0) {
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row + 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
               }
               if (
                 row.col == diff.col - 1 &&
                 0 < row.row &&
                 row.row < diff.row - 1
               ) {
-                this.tile_click(
-                  this.tiles[row.col][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row + 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
               }
               if (
                 0 < row.col &&
                 row.col < diff.col - 1 &&
                 row.row == diff.row - 1
               ) {
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row - 1],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
               }
               if (
                 0 < row.col &&
@@ -465,38 +203,14 @@ Vue.createApp({
                 0 < row.row &&
                 row.row < diff.row - 1
               ) {
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row + 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col - 1][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row - 1],
-                  this.Beginner
-                );
-                this.tile_click(
-                  this.tiles[row.col + 1][row.row],
-                  this.Beginner
-                );
+                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                this.tile_click(this.tiles[row.col + 1][row.row], diff);
               }
             }
           }
@@ -514,33 +228,36 @@ Vue.createApp({
         for (let i = 0; i < diff.mines; i++) {
           var rand_col = Math.ceil(Math.random() * diff.col - 1);
           var rand_row = Math.ceil(Math.random() * diff.row - 1);
-          if (
-            (this.tiles[rand_col][rand_row].mine == false) &
-            (rand_col !== row.col) &
-            (rand_row !== row.row)
+          while (
+            this.tiles[rand_col][rand_row].mine == true ||
+            rand_col == row.col ||
+            rand_row == row.row
           ) {
-            this.tiles[rand_col][rand_row].mine = true;
-            this.tiles[rand_col][rand_row].col = rand_col;
-            this.tiles[rand_col][rand_row].row = rand_row;
-            this.mines.push(this.tiles[rand_col][rand_row]);
-          } else {
             rand_col = Math.ceil(Math.random() * diff.col - 1);
             rand_row = Math.ceil(Math.random() * diff.row - 1);
-            this.tiles[rand_col][rand_row].mine = true;
-            this.tiles[rand_col][rand_row].col = rand_col;
-            this.tiles[rand_col][rand_row].row = rand_row;
-            this.mines.push(this.tiles[rand_col][rand_row]);
           }
+          this.tiles[rand_col][rand_row].mine = true;
+          this.tiles[rand_col][rand_row].col = rand_col;
+          this.tiles[rand_col][rand_row].row = rand_row;
+          this.mines.push(this.tiles[rand_col][rand_row]);
+          //   rand_col = Math.ceil(Math.random() * diff.col - 1);
+          //   rand_row = Math.ceil(Math.random() * diff.row - 1);
+          //   this.tiles[rand_col][rand_row].mine = true;
+          //   this.tiles[rand_col][rand_row].col = rand_col;
+          //   this.tiles[rand_col][rand_row].row = rand_row;
+          //   this.mines.push(this.tiles[rand_col][rand_row]);
+          // }
         }
       }
     },
 
-    generateBoard: function (col, row) {
+    generateBoard: function (difficulty) {
+      var diff = difficulty;
       var rowNum = 0;
       var colNum = 0;
-      for (let i = 0; i < col; i++) {
+      for (let i = 0; i < diff.col; i++) {
         const column = [];
-        for (let j = 0; j < row; j++) {
+        for (let j = 0; j < diff.row; j++) {
           tile = {
             mine: false,
             class: "tile",
@@ -615,7 +332,7 @@ Vue.createApp({
       }
     });
     this.connect();
-    this.generateBoard(this.Beginner.col, this.Beginner.row);
+    this.generateBoard(this.Beginner);
     console.log(this.mines);
   },
 }).mount("#app");

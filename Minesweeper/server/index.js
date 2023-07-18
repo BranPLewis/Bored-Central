@@ -29,6 +29,8 @@ wss.on("connection", function (ws) {
   // This is the new client connection
   console.log("New `ws` client connected");
 
+  var playerID = ws;
+
   // Handle message through websocket
   ws.on("message", function incoming(message) {
     console.log("Got a message through WS: ", message.toString());

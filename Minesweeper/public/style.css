@@ -147,8 +147,22 @@ nav {
   flex-flow: column nowrap;
 }
 
+.gameStatus {
+  display: flex;
+  justify-content: center;
+}
+
 .gameOverObject {
-  height: 40px;
-  width: 40px;
-  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  width: 8rem;
+  background-color: rgb(151, 151, 151);
+  text-align: center;
+}
+.diff {
+  background-color: white;
+  height: 60px;
+  width: 120px;
 }
