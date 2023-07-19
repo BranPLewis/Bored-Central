@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bored-Verse</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="icon" type="image/x-icon" href="cloud.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <nav class="msnav">   
+            <div class="logo">
+                <a href="index.html"><img src="game-console.svg"></a>
+            </div>
+            <div class="title">
+                <h1>Bored-Central</h1>
+            </div>
+
+            <div class="menu">
+                <img src="menu.png">
+            </div>
+        </nav>
+        
+        <main class="msMain">
+            <h1 class="msTitle">MINESWEEPER<img class='bombicon' src="minesweeper/bomb.png"></h1>
+            <div class="gameboard">
+                <div class="boardHeader">
+                    <div class='box'>
+                        <div><img src='minesweeper/flagIcon.svg'></img></div>
+                        <div class='data'>{{bombs}}</div>
+                    </div>
+                    <div class='box'>
+                        <div class="restart"><img src='minesweeper/restart.png'></img></div>
+                    </div>
+                    <div class='box'>
+                        <div><img src='minesweeper/stopwatch.svg'></img></div>
+                        <div class='data'>{{formatTimer}}</div>
+                    </div>
+                </div>
+                <div id="board"  @click="startTimer()" v-on:click.right= "placeFlag()">
+                    <div class="column" v-for="col in tiles">
+                        <div class="row" v-for="row in col">
+                            <div @click="generateMines(row, this.Beginner), tile_click(row, this.Beginner)" v-bind:class="row.class">
+                            {{row.number}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </main>
+       
+    </div>
+    <script>window.addEventListener('contextmenu', (event) => {event.preventDefault();});</script>
+    <script src="app.js"></script>
+</body>
+
+</html>

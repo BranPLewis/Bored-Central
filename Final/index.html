@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bored-Verse</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="icon" type="image/x-icon" href="cloud.png">
+</head>
+
+<body>
+    <div id="app">
+        <nav>   
+            <div class="logo">
+                <a href="index.html"><img src="game-console.svg"></a>
+            </div>
+            <div class="title">
+                <h1>Bored-Central</h1>
+            </div>
+
+            <div class="menu">
+                <img src="menu.png" @click="toggle_hotbar()" alt="controller">
+            </div>
+        </nav>
+        
+        <main>
+            <div class="hero">
+                <div class="search">
+                    <input type="text" placeholder="Search Games Library...">
+                </div>
+                <div class="games">
+                    <a href="minesweeper.html"><div class="game1"></div></a>
+                </div>
+            </div>
+        </main>
+       
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
