@@ -1,22 +1,11 @@
 Vue.createApp({
   data() {
     return {
-      Beginner: {
-        col: 10,
-        row: 10,
-        mines: 10,
-      },
-      Intermediate: {
-        col: 16,
-        row: 16,
-        mines: 40,
-      },
-      Hard: {
-        col: 30,
-        row: 16,
-        mines: 99,
-      },
-      activeDifficulty: [this.Beginner],
+      minutes: 0,
+      seconds: 0,
+      timer: false,
+      currentMines: 0,
+      activeDifficulty: [],
       board_size: 64,
       board_height: 8,
       board_width: 8,
@@ -25,27 +14,51 @@ Vue.createApp({
       HTTPmessage: "",
       socket: null,
       tileOn: true,
+      difficultySelection: true,
       gameOver: false,
       mines: [],
       tiles: [],
     };
   },
   methods: {
+    difficultySwitch: function () {
+      this.difficultySelection = false;
+    },
+
     changeDifficultytoBeginner() {
+      var Beginner = {
+        col: 10,
+        row: 10,
+        mines: 10,
+      };
+      this.currentMines = 10;
       this.activeDifficulty.shift();
-      this.activeDifficulty.push(this.Beginner);
+      this.activeDifficulty.push(Beginner);
       console.log("Difficulty is Beginner");
     },
 
     changeDifficultytoIntermediate() {
+      var Intermediate = {
+        col: 20,
+        row: 14,
+        mines: 40,
+      };
+      this.currentMines = 40;
       this.activeDifficulty.shift();
-      this.activeDifficulty.push(this.Intermediate);
+      this.activeDifficulty.push(Intermediate);
       console.log("Difficulty is Intermediate");
     },
 
     changeDifficultytoHard() {
+      var Hard = {
+        col: 30,
+        row: 16,
+        mines: 99,
+      };
+      this.currentMines = 99;
       this.activeDifficulty.shift();
-      this.activeDifficulty.push(this.Hard);
+      console.log(this.activeDifficulty);
+      this.activeDifficulty.push(Hard);
       console.log("Difficulty is Hard");
     },
 
@@ -53,9 +66,20 @@ Vue.createApp({
       if (this.gameOver == false) {
         var diff = difficulty;
         if (row.mine == false) {
-          if (row.class != "clicked") {
-            row.class = "clicked";
-            console.log(row);
+          if (
+            row.class !== "clickedBeginner" &&
+            row.class !== "clickedIntermediate" &&
+            row.class !== "clickedHard"
+          ) {
+            if (this.activeDifficulty[0].col == 10) {
+              row.class = "clickedBeginner";
+            }
+            if (this.activeDifficulty[0].col == 20) {
+              row.class = "clickedIntermediate";
+            }
+            if (this.activeDifficulty[0].col == 30) {
+              row.class = "clickedHard";
+            }
             // Start with the Cross with out of bounds check
             //
             // Right of the cross
@@ -217,7 +241,15 @@ Vue.createApp({
         } else {
           this.gameOver = true;
           this.gameOverExec(this.Beginner);
-          row.class = "mine";
+          if (this.activeDifficulty[0].col == 10) {
+            row.class = "mineBeginner";
+          }
+          if (this.activeDifficulty[0].col == 20) {
+            row.class = "mineIntermediate";
+          }
+          if (this.activeDifficulty[0].col == 30) {
+            row.class = "mineHard";
+          }
         }
       }
     },
@@ -257,27 +289,64 @@ Vue.createApp({
       var colNum = 0;
       for (let i = 0; i < diff.col; i++) {
         const column = [];
-        for (let j = 0; j < diff.row; j++) {
-          tile = {
-            mine: false,
-            class: "tile",
-            number: "",
-            col: colNum,
-            row: rowNum,
-          };
-          rowNum += 1;
-          column.push(tile);
+        if (this.activeDifficulty[0].col == 10) {
+          for (let j = 0; j < diff.row; j++) {
+            tile = {
+              mine: false,
+              class: "tileBeginner",
+              number: "",
+              col: colNum,
+              row: rowNum,
+            };
+            rowNum += 1;
+            column.push(tile);
+          }
+        }
+        if (this.activeDifficulty[0].col == 20) {
+          for (let j = 0; j < diff.row; j++) {
+            tile = {
+              mine: false,
+              class: "tileIntermediate",
+              number: "",
+              col: colNum,
+              row: rowNum,
+            };
+            rowNum += 1;
+            column.push(tile);
+          }
+        }
+        if (this.activeDifficulty[0].col == 30) {
+          for (let j = 0; j < diff.row; j++) {
+            tile = {
+              mine: false,
+              class: "tileHard",
+              number: "",
+              col: colNum,
+              row: rowNum,
+            };
+            rowNum += 1;
+            column.push(tile);
+          }
         }
         colNum += 1;
         rowNum = 0;
         this.tiles.push(column);
       }
-      console.log(this.tiles);
     },
 
     gameOverExec: function () {
       for (i = 0; i < this.mines.length; i++) {
-        this.tiles[this.mines[i].col][this.mines[i].row].class = "mine";
+        if (this.activeDifficulty[0].col == 10) {
+          this.tiles[this.mines[i].col][this.mines[i].row].class =
+            "mineBeginner";
+        }
+        if (this.activeDifficulty[0].col == 20) {
+          this.tiles[this.mines[i].col][this.mines[i].row].class =
+            "mineIntermediate";
+        }
+        if (this.activeDifficulty[0].col == 30) {
+          this.tiles[this.mines[i].col][this.mines[i].row].class = "mineHard";
+        }
       }
     },
 
@@ -286,6 +355,22 @@ Vue.createApp({
     },
     hotbarOff: function () {
       this.hotbarOn = false;
+    },
+    setTimer() {
+      this.timer = true;
+      setInterval(() => {
+        if (this.seconds < 59) {
+          this.seconds++;
+        } else {
+          this.seconds = 0;
+          this.minutes++;
+        }
+      }, 1100);
+    },
+    startTimer() {
+      if (this.timer == false) {
+        this.setTimer();
+      }
     },
     connect: function () {
       const protocol = window.location.protocol.includes("https")
@@ -325,6 +410,15 @@ Vue.createApp({
       };
     },
   },
+
+  computed: {
+    formatTimer() {
+      const formattedMinutes = this.minutes.toString();
+      const formattedSeconds = this.seconds.toString().padStart(2, "0");
+      return `${formattedMinutes}:${formattedSeconds}`;
+    },
+  },
+
   created: function () {
     window.addEventListener("keydown", (e) => {
       if (e.key == "Escape") {
@@ -332,7 +426,5 @@ Vue.createApp({
       }
     });
     this.connect();
-    this.generateBoard(this.Beginner);
-    console.log(this.mines);
   },
 }).mount("#app");

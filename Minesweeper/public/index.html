@@ -14,7 +14,7 @@
         <nav>
             <div class="navigation">
                 <div class="title">Bored-Central</div>
-                <img class="hotbar_button" @click="toggle_hotbar()" src="menu.png" alt="controller">
+                <img class="hotbar_button" @click="toggle_hotbar()" src="img/menu.png" alt="controller">
             </div>
             <div class="hotbar" v-show="hotbarOn">
                 <div class='hotbar_top'>
@@ -23,19 +23,32 @@
                 </div>
             </div>
         </nav>
+        <div class="boardHeader">
+            <div class='box'>
+                <div><img src='img/flagIcon.svg'></img></div>
+                <div class='data'>{{currentMines}}</div>
+            </div>
+            <div class='box'>
+                <div class="restart"><img src='img/restart.png'></img></div>
+            </div>
+            <div class='box'>
+                <div><img src='img/stopwatch.svg'></img></div>
+                <div class='data'>{{formatTimer}}</div>
+            </div>
+        </div>
         <div id="board">
             <div class="column" v-for="col in tiles">
                 <div class="row" v-for="row in col">
                     <div
-                    @click="generateMines(row, this.Beginner), tile_click(row, this.Beginner)"
+                    @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer()"
                     v-bind:class="row.class"
                     >{{row.number}}</div>
                 </div>
             </div>
-            <div class="diffBox">
-                <div class="diff" @click="changeDifficultytoBeginner()">Beginner</div>
-                <div class="diff" @click="changeDifficultytoIntermediate()">Intermediate</div>
-                <div class="diff" @click="changeDifficultytoHard()">Hard</div>
+            <div class="diffBox" v-show="difficultySelection">
+                <div class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</div>
+                <div class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0])">Intermediate</div>
+                <div class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0])">Hard</div>
             </div>
         </div>
         <div class="gameStatus">

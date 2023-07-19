@@ -10,9 +10,14 @@
 }
 
 body {
-  background-image: linear-gradient(to bottom left, #f2be22, #f29727, #f24c3d);
+  background-color: rgb(222, 222, 222);
   width: 100%;
   min-height: 100vh;
+}
+
+a {
+  display: flex;
+  text-decoration: none;
 }
 
 nav {
@@ -110,33 +115,117 @@ nav {
   align-items: center;
 }
 
-.tile {
+.tileBeginner {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
-  width: 32px;
-  background-color: grey;
+  height: 2.75rem;
+  width: 2.75rem;
+  background-image: url("img/tile.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   border: 1px solid black;
 }
 
-.clicked {
+.tileIntermediate {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
-  width: 32px;
+  height: 2.25rem;
+  width: 2.25rem;
+  background-image: url("img/tile.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid black;
+}
+
+.tileHard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+  background-image: url("img/tile.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid black;
+}
+
+.tileBeginner:hover,
+.tileIntermediate:hover,
+.tileHard:hover {
+  filter: brightness(85%);
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.clickedBeginner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.75rem;
+  width: 2.75rem;
   background-color: rgb(255, 255, 255);
   border: 1px solid black;
 }
 
-.mine {
+.clickedIntermediate {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
-  width: 32px;
-  background-image: url("mine.png");
+  height: 2.25rem;
+  width: 2.25rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+}
+
+.clickedHard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+}
+
+.mineBeginner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.75rem;
+  width: 2.75rem;
+  background-image: url("img/bomb.png");
+  background-repeat: no-repeat;
+  background-size: 32px;
+  background-position: center;
+  border: 1px solid black;
+}
+
+.mineIntermediate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  background-image: url("img/bomb.png");
+  background-repeat: no-repeat;
+  background-size: 32px;
+  background-position: center;
+  border: 1px solid black;
+}
+
+.mineHard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+  background-image: url("img/bomb.png");
+  background-repeat: no-repeat;
   background-size: 32px;
   background-position: center;
   border: 1px solid black;
@@ -161,8 +250,68 @@ nav {
   background-color: rgb(151, 151, 151);
   text-align: center;
 }
+.diffBox {
+  margin-top: 60vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: rgba(151, 151, 151, 0.9);
+  height: 80.6rem;
+  width: 100%;
+}
 .diff {
+  margin: 12px;
   background-color: white;
   height: 60px;
   width: 120px;
+}
+
+.boardHeader {
+  display: flex;
+  justify-content: center;
+}
+
+.box {
+  display: flex;
+  height: auto;
+  font-family: "Gemunu Libre", sans-serif;
+  color: rgb(221, 0, 0);
+  font-size: 2.5rem;
+  background-color: rgb(195, 195, 195);
+  margin-bottom: 10px;
+  width: 9.1rem;
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+  justify-content: space-evenly;
+  margin-bottom: 1rem;
+}
+
+.box img {
+  width: 1.7rem;
+  height: 1.7rem;
+  justify-content: space-evenly;
+}
+
+.data {
+  font-family: "Gemunu Libre", sans-serif;
+}
+
+.restart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.restart:hover {
+  cursor: pointer;
+  background-color: rgb(128, 128, 128, 0.6);
 }
