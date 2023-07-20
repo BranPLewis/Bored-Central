@@ -17,6 +17,7 @@ Vue.createApp({
       tileOn: true,
       difficultySelection: true,
       gameOver: false,
+      win: false,
       mines: [],
       tiles: [],
     };
@@ -66,8 +67,28 @@ Vue.createApp({
       console.log("Difficulty is Hard");
     },
 
+    checkWin: function (difficulty) {
+      var diff = difficulty;
+      var maxNum = diff.col * diff.row;
+      var num = 0;
+      for (x = 0; x < this.tiles.length; x++) {
+        for (y = 0; y < this.tiles[x].length; y++) {
+          if (
+            this.tiles[x][y].class !== "mine" &&
+            this.tiles[x][y].class !== "tile"
+          ) {
+            num += 1;
+          }
+        }
+      }
+      console.log(num);
+      if (num == maxNum) {
+        this.win = true;
+      }
+    },
+
     tile_click: function (row, difficulty) {
-      if (this.gameOver == false) {
+      if (this.gameOver == false && this.win == false) {
         var diff = difficulty;
         if (row.flag == "") {
           if (row.mine == false) {

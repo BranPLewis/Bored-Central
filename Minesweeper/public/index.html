@@ -40,7 +40,7 @@
             <div class="column" v-for="col in tiles">
                 <div class="row" v-for="row in col">
                     <div
-                    @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer()"
+                    @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0])"
                     :class="[row.class, row.color, row.flag, row.difficulty]"
                     @contextmenu.prevent
                     @click.right="flag(row)"
