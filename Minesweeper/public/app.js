@@ -4,6 +4,7 @@ Vue.createApp({
       minutes: 0,
       seconds: 0,
       timer: false,
+      restarted: false,
       currentMines: 0,
       activeDifficulty: [],
       board_size: 64,
@@ -27,11 +28,12 @@ Vue.createApp({
 
     changeDifficultytoBeginner() {
       var Beginner = {
+        title: "Beginner",
         col: 10,
         row: 10,
-        mines: 10,
+        mines: 12,
       };
-      this.currentMines = 10;
+      this.currentMines = 12;
       this.activeDifficulty.shift();
       this.activeDifficulty.push(Beginner);
       console.log("Difficulty is Beginner");
@@ -39,6 +41,7 @@ Vue.createApp({
 
     changeDifficultytoIntermediate() {
       var Intermediate = {
+        title: "Intermediate",
         col: 20,
         row: 14,
         mines: 40,
@@ -51,6 +54,7 @@ Vue.createApp({
 
     changeDifficultytoHard() {
       var Hard = {
+        title: "Hard",
         col: 30,
         row: 16,
         mines: 99,
@@ -65,191 +69,200 @@ Vue.createApp({
     tile_click: function (row, difficulty) {
       if (this.gameOver == false) {
         var diff = difficulty;
-        if (row.mine == false) {
-          if (
-            row.class !== "clickedBeginner" &&
-            row.class !== "clickedIntermediate" &&
-            row.class !== "clickedHard"
-          ) {
-            if (this.activeDifficulty[0].col == 10) {
-              row.class = "clickedBeginner";
-            }
-            if (this.activeDifficulty[0].col == 20) {
-              row.class = "clickedIntermediate";
-            }
-            if (this.activeDifficulty[0].col == 30) {
-              row.class = "clickedHard";
-            }
-            // Start with the Cross with out of bounds check
-            //
-            // Right of the cross
-            if (row.col + 1 <= diff.col - 1) {
-              if (this.tiles[row.col + 1][row.row].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+        if (row.flag == "") {
+          if (row.mine == false) {
+            if (row.class !== "clicked") {
+              row.class = "clicked";
+              // Start with the Cross with out of bounds check
+              //
+              // Right of the cross
+              if (row.col + 1 <= diff.col - 1) {
+                if (this.tiles[row.col + 1][row.row].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Bottom of the cross
-            if (row.row + 1 <= diff.row - 1) {
-              if (this.tiles[row.col][row.row + 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Bottom of the cross
+              if (row.row + 1 <= diff.row - 1) {
+                if (this.tiles[row.col][row.row + 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Left of the cross
-            if (row.col - 1 >= 0) {
-              if (this.tiles[row.col - 1][row.row].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Left of the cross
+              if (row.col - 1 >= 0) {
+                if (this.tiles[row.col - 1][row.row].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Top of the cross
-            if (row.row - 1 >= 0) {
-              if (this.tiles[row.col][row.row - 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Top of the cross
+              if (row.row - 1 >= 0) {
+                if (this.tiles[row.col][row.row - 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            //Do the corners next
-            //
-            // Bottom Right
-            if (row.col + 1 <= diff.col - 1 && row.row + 1 <= diff.row - 1) {
-              if (this.tiles[row.col + 1][row.row + 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              //Do the corners next
+              //
+              // Bottom Right
+              if (row.col + 1 <= diff.col - 1 && row.row + 1 <= diff.row - 1) {
+                if (this.tiles[row.col + 1][row.row + 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Bottom Left
-            if (row.col - 1 >= 0 && row.row + 1 <= diff.row - 1) {
-              if (this.tiles[row.col - 1][row.row + 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Bottom Left
+              if (row.col - 1 >= 0 && row.row + 1 <= diff.row - 1) {
+                if (this.tiles[row.col - 1][row.row + 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Top Left
-            if (row.col - 1 >= 0 && row.row - 1 >= 0) {
-              if (this.tiles[row.col - 1][row.row - 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Top Left
+              if (row.col - 1 >= 0 && row.row - 1 >= 0) {
+                if (this.tiles[row.col - 1][row.row - 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
-            }
-            // Top Right
-            if (row.col + 1 <= diff.col - 1 && row.row - 1 >= 0) {
-              if (this.tiles[row.col + 1][row.row - 1].mine == true) {
-                if (row.number == "") {
-                  row.number = 1;
-                } else {
-                  row.number += 1;
+              // Top Right
+              if (row.col + 1 <= diff.col - 1 && row.row - 1 >= 0) {
+                if (this.tiles[row.col + 1][row.row - 1].mine == true) {
+                  if (row.number == "") {
+                    row.number = 1;
+                  } else {
+                    row.number += 1;
+                  }
                 }
               }
+              if (row.number == "") {
+                if (row.col == diff.col - 1 && row.row == diff.row - 1) {
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                }
+                if (row.col == diff.col - 1 && row.row == 0) {
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                }
+                if (row.col == 0 && row.row == 0) {
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                }
+                if (row.col == 0 && row.row == diff.row - 1) {
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                }
+                if (row.col == 0 && 0 < row.row && row.row < diff.row - 1) {
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                }
+                if (0 < row.col && row.col < diff.col - 1 && row.row == 0) {
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                }
+                if (
+                  row.col == diff.col - 1 &&
+                  0 < row.row &&
+                  row.row < diff.row - 1
+                ) {
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                }
+                if (
+                  0 < row.col &&
+                  row.col < diff.col - 1 &&
+                  row.row == diff.row - 1
+                ) {
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                }
+                if (
+                  0 < row.col &&
+                  row.col < diff.col - 1 &&
+                  0 < row.row &&
+                  row.row < diff.row - 1
+                ) {
+                  this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row], diff);
+                  this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
+                  this.tile_click(this.tiles[row.col + 1][row.row], diff);
+                }
+              }
+              if (row.number == 1) {
+                row.color = "blue";
+              }
+              if (row.number == 2) {
+                row.color = "green";
+              }
+              if (row.number == 3) {
+                row.color = "red";
+              }
+              if (row.number == 4) {
+                row.color = "black";
+              }
+              if (row.number == 5) {
+                row.color = "purple";
+              }
             }
-            if (row.number == "") {
-              if (row.col == diff.col - 1 && row.row == diff.row - 1) {
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-              }
-              if (row.col == diff.col - 1 && row.row == 0) {
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-              }
-              if (row.col == 0 && row.row == 0) {
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-              }
-              if (row.col == 0 && row.row == diff.row - 1) {
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
-              }
-              if (row.col == 0 && 0 < row.row && row.row < diff.row - 1) {
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
-              }
-              if (0 < row.col && row.col < diff.col - 1 && row.row == 0) {
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
-              }
-              if (
-                row.col == diff.col - 1 &&
-                0 < row.row &&
-                row.row < diff.row - 1
-              ) {
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
-              }
-              if (
-                0 < row.col &&
-                row.col < diff.col - 1 &&
-                row.row == diff.row - 1
-              ) {
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
-              }
-              if (
-                0 < row.col &&
-                row.col < diff.col - 1 &&
-                0 < row.row &&
-                row.row < diff.row - 1
-              ) {
-                this.tile_click(this.tiles[row.col + 1][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row + 1], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row], diff);
-                this.tile_click(this.tiles[row.col - 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row - 1], diff);
-                this.tile_click(this.tiles[row.col + 1][row.row], diff);
-              }
-            }
+          } else {
+            this.gameOver = true;
+            this.gameOverExec(this.Beginner);
+            row.class = "mine";
           }
+        }
+      }
+    },
+
+    flag: function (row) {
+      if (this.gameOver == false) {
+        if (row.flag == "") {
+          row.flag = "flagged";
+          this.currentMines -= 1;
         } else {
-          this.gameOver = true;
-          this.gameOverExec(this.Beginner);
-          if (this.activeDifficulty[0].col == 10) {
-            row.class = "mineBeginner";
-          }
-          if (this.activeDifficulty[0].col == 20) {
-            row.class = "mineIntermediate";
-          }
-          if (this.activeDifficulty[0].col == 30) {
-            row.class = "mineHard";
-          }
+          row.flag = "";
+          this.currentMines += 1;
         }
       }
     },
@@ -272,13 +285,6 @@ Vue.createApp({
           this.tiles[rand_col][rand_row].col = rand_col;
           this.tiles[rand_col][rand_row].row = rand_row;
           this.mines.push(this.tiles[rand_col][rand_row]);
-          //   rand_col = Math.ceil(Math.random() * diff.col - 1);
-          //   rand_row = Math.ceil(Math.random() * diff.row - 1);
-          //   this.tiles[rand_col][rand_row].mine = true;
-          //   this.tiles[rand_col][rand_row].col = rand_col;
-          //   this.tiles[rand_col][rand_row].row = rand_row;
-          //   this.mines.push(this.tiles[rand_col][rand_row]);
-          // }
         }
       }
     },
@@ -289,44 +295,19 @@ Vue.createApp({
       var colNum = 0;
       for (let i = 0; i < diff.col; i++) {
         const column = [];
-        if (this.activeDifficulty[0].col == 10) {
-          for (let j = 0; j < diff.row; j++) {
-            tile = {
-              mine: false,
-              class: "tileBeginner",
-              number: "",
-              col: colNum,
-              row: rowNum,
-            };
-            rowNum += 1;
-            column.push(tile);
-          }
-        }
-        if (this.activeDifficulty[0].col == 20) {
-          for (let j = 0; j < diff.row; j++) {
-            tile = {
-              mine: false,
-              class: "tileIntermediate",
-              number: "",
-              col: colNum,
-              row: rowNum,
-            };
-            rowNum += 1;
-            column.push(tile);
-          }
-        }
-        if (this.activeDifficulty[0].col == 30) {
-          for (let j = 0; j < diff.row; j++) {
-            tile = {
-              mine: false,
-              class: "tileHard",
-              number: "",
-              col: colNum,
-              row: rowNum,
-            };
-            rowNum += 1;
-            column.push(tile);
-          }
+        for (let j = 0; j < diff.row; j++) {
+          tile = {
+            mine: false,
+            class: "tile",
+            number: "",
+            color: "",
+            flag: "",
+            difficulty: diff.title,
+            col: colNum,
+            row: rowNum,
+          };
+          rowNum += 1;
+          column.push(tile);
         }
         colNum += 1;
         rowNum = 0;
@@ -335,19 +316,21 @@ Vue.createApp({
     },
 
     gameOverExec: function () {
+      this.timer = false;
       for (i = 0; i < this.mines.length; i++) {
-        if (this.activeDifficulty[0].col == 10) {
-          this.tiles[this.mines[i].col][this.mines[i].row].class =
-            "mineBeginner";
-        }
-        if (this.activeDifficulty[0].col == 20) {
-          this.tiles[this.mines[i].col][this.mines[i].row].class =
-            "mineIntermediate";
-        }
-        if (this.activeDifficulty[0].col == 30) {
-          this.tiles[this.mines[i].col][this.mines[i].row].class = "mineHard";
-        }
+        this.tiles[this.mines[i].col][this.mines[i].row].class = "mine";
       }
+    },
+
+    restart(difficulty) {
+      this.restarted = true;
+      this.timer = false;
+      this.gameOver = false;
+      var diff = difficulty;
+      this.tiles = [];
+      this.mines = [];
+      this.generateBoard(this.activeDifficulty[0]);
+      console.log(this.tiles);
     },
 
     toggle_hotbar: function () {
@@ -358,12 +341,22 @@ Vue.createApp({
     },
     setTimer() {
       this.timer = true;
-      setInterval(() => {
+      var gametime = setInterval(() => {
         if (this.seconds < 59) {
           this.seconds++;
         } else {
           this.seconds = 0;
           this.minutes++;
+        }
+        if (this.restarted == true) {
+          setTimeout(() => {
+            this.seconds = 0;
+            this.minutes = 0;
+          }, 100);
+          clearInterval(gametime);
+        }
+        if (this.gameOver == true) {
+          clearInterval(gametime);
         }
       }, 1100);
     },

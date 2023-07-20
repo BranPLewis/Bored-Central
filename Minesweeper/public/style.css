@@ -9,6 +9,11 @@
   src: url("fonts/BarcadeBI.otf");
 }
 
+@font-face {
+  font-family: "minesweeper";
+  src: url("img/minesweeper.ttf");
+}
+
 body {
   background-color: rgb(222, 222, 222);
   width: 100%;
@@ -115,7 +120,7 @@ nav {
   align-items: center;
 }
 
-.tileBeginner {
+.tile.Beginner {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,7 +133,7 @@ nav {
   border: 1px solid black;
 }
 
-.tileIntermediate {
+.tile.Intermediate {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,7 +146,7 @@ nav {
   border: 1px solid black;
 }
 
-.tileHard {
+.tile.Hard {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,45 +159,49 @@ nav {
   border: 1px solid black;
 }
 
-.tileBeginner:hover,
-.tileIntermediate:hover,
-.tileHard:hover {
+.tile:hover {
   filter: brightness(85%);
   transition: 0.2s;
   cursor: pointer;
 }
 
-.clickedBeginner {
+.clicked.Beginner {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2.75rem;
   width: 2.75rem;
+  font-size: 20px;
+  font-family: minesweeper;
   background-color: rgb(255, 255, 255);
   border: 1px solid black;
 }
 
-.clickedIntermediate {
+.clicked.Intermediate {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2.25rem;
   width: 2.25rem;
+  font-size: 16px;
+  font-family: minesweeper;
   background-color: rgb(255, 255, 255);
   border: 1px solid black;
 }
 
-.clickedHard {
+.clicked.Hard {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2rem;
   width: 2rem;
+  font-size: 12px;
+  font-family: minesweeper;
   background-color: rgb(255, 255, 255);
   border: 1px solid black;
 }
 
-.mineBeginner {
+.mine.Beginner {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -200,12 +209,12 @@ nav {
   width: 2.75rem;
   background-image: url("img/bomb.png");
   background-repeat: no-repeat;
-  background-size: 32px;
+  background-size: 36px;
   background-position: center;
   border: 1px solid black;
 }
 
-.mineIntermediate {
+.mine.Intermediate {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -213,12 +222,12 @@ nav {
   width: 2.25rem;
   background-image: url("img/bomb.png");
   background-repeat: no-repeat;
-  background-size: 32px;
+  background-size: 30px;
   background-position: center;
   border: 1px solid black;
 }
 
-.mineHard {
+.mine.Hard {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -226,7 +235,7 @@ nav {
   width: 2rem;
   background-image: url("img/bomb.png");
   background-repeat: no-repeat;
-  background-size: 32px;
+  background-size: 28px;
   background-position: center;
   border: 1px solid black;
 }
@@ -314,4 +323,36 @@ nav {
 .restart:hover {
   cursor: pointer;
   background-color: rgb(128, 128, 128, 0.6);
+}
+
+.flagged.Beginner {
+  background-image: url("img/flagged.png");
+}
+
+.flagged.Intermediate {
+  background-image: url("img/flagged.png");
+}
+
+.flagged.Hard {
+  background-image: url("img/flagged.png");
+}
+
+.blue {
+  color: blue;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
+
+.purple {
+  color: purple;
 }

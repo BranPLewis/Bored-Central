@@ -29,7 +29,7 @@
                 <div class='data'>{{currentMines}}</div>
             </div>
             <div class='box'>
-                <div class="restart"><img src='img/restart.png'></img></div>
+                <div class="restart" @click="restart(this.activeDifficulty[0]),startTimer()"><img src='img/restart.png'></img></div>
             </div>
             <div class='box'>
                 <div><img src='img/stopwatch.svg'></img></div>
@@ -41,8 +41,12 @@
                 <div class="row" v-for="row in col">
                     <div
                     @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer()"
-                    v-bind:class="row.class"
-                    >{{row.number}}</div>
+                    :class="[row.class, row.color, row.flag, row.difficulty]"
+                    @contextmenu.prevent
+                    @click.right="flag(row)"
+                    >
+                    {{row.number}}
+                </div>
                 </div>
             </div>
             <div class="diffBox" v-show="difficultySelection">
