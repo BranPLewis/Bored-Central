@@ -1,6 +1,7 @@
 Vue.createApp({
   data() {
     return {
+      descriptionPage: true,
       minutes: 0,
       seconds: 0,
       timer: false,
@@ -15,7 +16,7 @@ Vue.createApp({
       HTTPmessage: "",
       socket: null,
       tileOn: true,
-      difficultySelection: true,
+      difficultySelection: false,
       gameOver: false,
       win: false,
       mines: [],
@@ -23,6 +24,11 @@ Vue.createApp({
     };
   },
   methods: {
+    descriptionSwitch: function () {
+      this.descriptionPage = false;
+      this.difficultySelection = true;
+    },
+
     difficultySwitch: function () {
       this.difficultySelection = false;
     },
@@ -79,13 +85,20 @@ Vue.createApp({
           ) {
             num += 1;
           }
+          if (this.tiles[x][y].flag == "flagged") {
+            num += 1;
+          }
         }
       }
       console.log(num);
       if (num == maxNum) {
         this.win = true;
+        this.winExec();
+        console.log("You win!");
       }
     },
+
+    winExec: function () {},
 
     tile_click: function (row, difficulty) {
       if (this.gameOver == false && this.win == false) {
@@ -277,13 +290,20 @@ Vue.createApp({
     },
 
     flag: function (row) {
-      if (this.gameOver == false) {
-        if (row.flag == "") {
-          row.flag = "flagged";
-          this.currentMines -= 1;
+      if (this.gameOver == false && this.win == false) {
+        if (this.currentMines > 0) {
+          if (row.flag == "") {
+            row.flag = "flagged";
+            this.currentMines -= 1;
+          } else {
+            row.flag = "";
+            this.currentMines += 1;
+          }
         } else {
-          row.flag = "";
-          this.currentMines += 1;
+          if (row.flag == "flagged") {
+            row.flag = "";
+            this.currentMines += 1;
+          }
         }
       }
     },
@@ -344,14 +364,16 @@ Vue.createApp({
     },
 
     restart(difficulty) {
-      this.restarted = true;
-      this.timer = false;
-      this.gameOver = false;
       var diff = difficulty;
+      this.restarted = true;
+      this.setTimer();
+      this.currentMines = this.activeDifficulty[0].mines;
+      this.timer = false;
+      this.win = false;
+      this.gameOver = false;
       this.tiles = [];
       this.mines = [];
       this.generateBoard(this.activeDifficulty[0]);
-      console.log(this.tiles);
     },
 
     toggle_hotbar: function () {

@@ -106,11 +106,17 @@ nav {
   background-color: white;
 }
 
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 #board {
   display: flex;
   flex-flow: row;
   justify-content: center;
   align-items: center;
+  border: 2px solid black;
 }
 
 .row {
@@ -259,6 +265,16 @@ nav {
   background-color: rgb(151, 151, 151);
   text-align: center;
 }
+
+/* difficulty page code */
+
+.titleDiff {
+  margin-top: 36px;
+  font-size: 16px;
+  color: white;
+  font-family: minesweeper;
+}
+
 .diffBox {
   margin-top: 60vh;
   display: flex;
@@ -270,12 +286,54 @@ nav {
   height: 80.6rem;
   width: 100%;
 }
-.diff {
-  margin: 12px;
-  background-color: white;
-  height: 60px;
-  width: 120px;
+
+.diffContentBox {
+  background-color: rgb(155, 152, 152);
+  width: 190px;
+  height: 340px;
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.diff {
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+
+  background-color: rgb(215, 213, 213);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: 700;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  height: 43px;
+  width: 135px;
+
+  margin-top: 30px;
+
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.diff > l {
+  margin-top: 200px;
+}
+.diff:hover {
+  cursor: pointer;
+  background-color: rgb(184, 182, 182);
+  font-size: 15px;
+}
+
+/* -------------------- */
 
 .boardHeader {
   display: flex;
@@ -356,3 +414,136 @@ nav {
 .purple {
   color: purple;
 }
+
+/* Description page */
+
+.descBox {
+  margin-top: 60vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: rgba(151, 151, 151, 0.9);
+  height: 80.6rem;
+  width: 100%;
+}
+
+.descContentBox {
+  background-color: rgb(155, 152, 152);
+  width: 400px;
+  height: 440px;
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.descBoxTitle {
+  position: absolute;
+  font-size: 30px;
+  margin-top: 20px;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.descTextBox {
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+
+  overflow: auto;
+  background-color: rgb(215, 213, 213);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  width: 350px;
+  height: 180px;
+  margin-top: 70px;
+}
+.descText {
+  font-size: 16px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.descControlsBox {
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+
+  background-color: rgb(215, 213, 213);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  width: 190px;
+  height: 110px;
+  margin-top: 50px;
+  margin-left: -160px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.descControlsTitle {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  position: absolute;
+
+  margin-top: -33px;
+  margin-left: 46px;
+
+  font-size: 20px;
+}
+
+.descControlsBox > l {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 15px;
+
+  margin-left: 5px;
+  margin-top: 10px;
+}
+
+.descBoxStartButton {
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(139, 139, 139);
+
+  background-color: rgb(215, 213, 213);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: 700;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  width: 120px;
+  height: 40px;
+  margin-top: 85px;
+  margin-left: 30px;
+  position: absolute;
+
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.descBoxStartButton:hover {
+  cursor: pointer;
+  background-color: rgb(169, 169, 169);
+  font-size: 15px;
+}
+
+.descBoxBottom {
+  display: flex;
+  flex-direction: row;
+}
+
+/* -------------- */

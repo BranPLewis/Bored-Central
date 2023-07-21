@@ -29,30 +29,79 @@
                 <div class='data'>{{currentMines}}</div>
             </div>
             <div class='box'>
-                <div class="restart" @click="restart(this.activeDifficulty[0]),startTimer()"><img src='img/restart.png'></img></div>
+                <div class="restart" @click="restart(this.activeDifficulty[0])"><img src='img/restart.png'></img></div>
             </div>
             <div class='box'>
                 <div><img src='img/stopwatch.svg'></img></div>
                 <div class='data'>{{formatTimer}}</div>
             </div>
         </div>
-        <div id="board">
-            <div class="column" v-for="col in tiles">
-                <div class="row" v-for="row in col">
-                    <div
-                    @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0])"
-                    :class="[row.class, row.color, row.flag, row.difficulty]"
-                    @contextmenu.prevent
-                    @click.right="flag(row)"
-                    >
-                    {{row.number}}
+        <div class="wrapper">
+            <div id="board">
+                <div class="column" v-for="col in tiles">
+                    <div class="row" v-for="row in col">
+                        <div
+                        @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0])"
+                        :class="[row.class, row.color, row.flag, row.difficulty]"
+                        @contextmenu.prevent
+                        @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
+                        >
+                        {{row.number}}
+                    </div>
+                    </div>
                 </div>
+
+                <!-- description page -->
+
+                <div class="descBox" v-show="descriptionPage">
+                    <div class="descContentBox">
+
+                        <h3 class="descBoxTitle">How To Play</h3>
+
+                        <div class="descTextBox">
+                            <p class="descText">
+                                In this game you are presented with a board of squares.
+                                 Some squares contain mines, others squares don't. Clicking a square which doesn't have a mine reveals the number of neighbouring squares containing mines.
+                                 For example if a square contains a 1 then there is a mine in one of the surrounding squares and so on. If you click on a square containing a mine,
+                                 you lose. If there is a square which you think may contain a mine, you can place a flag to mark it. If you manage to open up all the squares without clicking on a mine, you win.
+
+                            </p>
+                        </div>
+                        <div class="descBoxBottom">
+                            <div class="descControlsBox">
+                                <h4 class="descControlsTitle">Controls</h4>
+
+                                <l>Left-Click to Click a Square</l><br>
+                                <l>Right-Click to Flag a Square</l>
+
+                            </div>
+                            <div>
+                                <a class="descBoxStartButton" @click="descriptionSwitch()">PLAY</a>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
-            </div>
-            <div class="diffBox" v-show="difficultySelection">
-                <div class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</div>
-                <div class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0])">Intermediate</div>
-                <div class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0])">Hard</div>
+
+                <!-- --------------- -->
+
+                <!-- difficulty page -->
+
+                <div class="diffBox" v-show="difficultySelection">
+                    <div class="diffContentBox">
+                        <p class="titleDiff">Difficulty:</p>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0])">Intermediate</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0])">Hard</a>
+                    </div>
+                </div>
+
+                <!-- --------------- -->
+
+                <div class="winBox" v-show="win">
+                    <div class="winning">You Win!</div>
+                </div>
             </div>
         </div>
         <div class="gameStatus">
