@@ -256,16 +256,6 @@ nav {
   justify-content: center;
 }
 
-.gameOverObject {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  width: 8rem;
-  background-color: rgb(151, 151, 151);
-  text-align: center;
-}
-
 /* difficulty page code */
 
 .titleDiff {
@@ -417,6 +407,11 @@ nav {
 
 /* Description page */
 
+.minesweeperTitle {
+  font-family: minesweeper;
+  margin-top: 20px;
+}
+
 .descBox {
   margin-top: 60vh;
   display: flex;
@@ -432,7 +427,7 @@ nav {
 .descContentBox {
   background-color: rgb(155, 152, 152);
   width: 400px;
-  height: 440px;
+  height: 480px;
   border-style: inset;
   border-width: 4px;
   outline-style: solid;
@@ -448,7 +443,7 @@ nav {
 .descBoxTitle {
   position: absolute;
   font-size: 30px;
-  margin-top: 20px;
+  margin-top: 60px;
 
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
@@ -465,15 +460,15 @@ nav {
     0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   width: 350px;
   height: 180px;
-  margin-top: 70px;
+  margin-top: 50px;
 }
 .descText {
-  font-size: 16px;
+  font-size: 18px;
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
-
+  font-weight: bold;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
@@ -488,7 +483,7 @@ nav {
     0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   width: 190px;
   height: 110px;
-  margin-top: 50px;
+  margin-top: 40px;
   margin-left: -160px;
 
   display: flex;
@@ -499,10 +494,10 @@ nav {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   position: absolute;
 
-  margin-top: -33px;
-  margin-left: 46px;
+  margin-top: -40px;
+  margin-left: 30px;
 
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .descControlsBox > l {
@@ -539,11 +534,120 @@ nav {
   cursor: pointer;
   background-color: rgb(169, 169, 169);
   font-size: 15px;
+  transition: 0.2s;
 }
 
 .descBoxBottom {
   display: flex;
   flex-direction: row;
+}
+.controlLbox {
+  margin-top: 12px;
+}
+
+.controlLtop {
+  text-decoration: underline 2px;
+}
+
+.controlL {
+  text-align: center;
+  font-family: minesweeper;
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.controlRbox {
+  margin-top: 12px;
+}
+
+.controlRtop {
+  text-decoration: underline 2px;
+}
+
+.controlR {
+  text-align: center;
+  font-family: minesweeper;
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* -------------- */
+
+/* you win code */
+
+.winBox {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(131, 130, 130);
+
+  background-color: rgb(183, 182, 182);
+
+  font-weight: 700;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  height: 123px;
+  width: 235px;
+
+  margin-top: 30px;
+
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.winning {
+  font-size: 26px;
+  font-family: Minesweeper;
+  color: rgb(176, 248, 69);
+  -webkit-text-stroke: 0.2px;
+  -webkit-text-stroke-color: rgb(145, 145, 145);
+}
+
+/* -------- */
+
+/* game over code */
+
+.loseBox {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+
+  border-style: inset;
+  border-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(131, 130, 130);
+
+  background-color: rgb(183, 182, 182);
+  font-weight: 700;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  height: 123px;
+  width: 235px;
+
+  margin-top: -270px;
+
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.gameOverObject {
+  font-size: 23px;
+  font-family: Minesweeper;
+  color: rgb(246, 26, 26);
+  -webkit-text-stroke: 0.2px;
+  -webkit-text-stroke-color: rgb(182, 181, 181);
 }
 
 /* -------------- */

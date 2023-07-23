@@ -401,6 +401,9 @@ Vue.createApp({
         if (this.gameOver == true) {
           clearInterval(gametime);
         }
+        if (this.win) {
+          clearInterval(gametime);
+        }
       }, 1100);
     },
     startTimer() {

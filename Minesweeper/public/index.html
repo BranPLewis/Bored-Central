@@ -56,6 +56,7 @@
                 <div class="descBox" v-show="descriptionPage">
                     <div class="descContentBox">
 
+                        <h2 class="minesweeperTitle">Minesweeper</h3>
                         <h3 class="descBoxTitle">How To Play</h3>
 
                         <div class="descTextBox">
@@ -70,9 +71,14 @@
                         <div class="descBoxBottom">
                             <div class="descControlsBox">
                                 <h4 class="descControlsTitle">Controls</h4>
-
-                                <l>Left-Click to Click a Square</l><br>
-                                <l>Right-Click to Flag a Square</l>
+                                <div class="controlLbox">
+                                    <p class="controlL controlLtop">Left-Click:</p>
+                                    <p class="controlL">Reveal any square</p>
+                                </div>
+                                <div class="controlRbox">
+                                    <p class="controlR controlRtop">Right-Click:</p>
+                                    <p class="controlR">Place a flag</p>
+                                </div>
 
                             </div>
                             <div>
@@ -105,14 +111,9 @@
             </div>
         </div>
         <div class="gameStatus">
-            <div class="gameOverObject" v-show="gameOver">Game Over</div>
-        </div>
-        <div class="websocket">
-            <input type="text" v-model="HTTPmessage">
-            <button @click="HTTPtest()">Send Test http Post</button>
-
-            <input type="text" v-model="Socketmessage">
-            <button @click="SocketTest()">Send Socket Test</button>
+            <div class="loseBox" v-show="gameOver">
+                <div class="gameOverObject" >Game Over</div>
+            </div>
         </div>
     </div>
 
