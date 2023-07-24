@@ -291,18 +291,20 @@ Vue.createApp({
 
     flag: function (row) {
       if (this.gameOver == false && this.win == false) {
-        if (this.currentMines > 0) {
-          if (row.flag == "") {
-            row.flag = "flagged";
-            this.currentMines -= 1;
+        if(row.class=='tile'){
+          if (this.currentMines > 0) {
+            if (row.flag == "") {
+              row.flag = "flagged";
+              this.currentMines -= 1;
+            } else {
+              row.flag = "";
+              this.currentMines += 1;
+            }
           } else {
-            row.flag = "";
-            this.currentMines += 1;
-          }
-        } else {
-          if (row.flag == "flagged") {
-            row.flag = "";
-            this.currentMines += 1;
+            if (row.flag == "flagged") {
+              row.flag = "";
+              this.currentMines += 1;
+            }
           }
         }
       }
