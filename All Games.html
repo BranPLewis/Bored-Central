@@ -12,34 +12,34 @@
 
 <body class="testb">
     <div id="app">
-        
+
         <div class="Frame2">
             <nav>
                 <div class="navigation">
 
                   <div class="buttons">
 
-                    <a href="1 player games.html" class="pbutton1">
+                    <a href="singleplayer.html" class="pbutton1">
                       <div class="player1B"><br>
                           <h5 class="platext"> 1 PLAYER </h5>
                       </div>
 
                     </a>
-                  
-                    <a href="2 player games.html" class="pbutton2">
+
+                    <a href="multiplayer.html" class="pbutton2">
                       <div class="player2B"><br>
                           <h5 class="platext"> 2 PLAYER </h5>
                       </div>
                     </a>
                   </div>
-                                       
+
                   <a href="index.html" class="title">Bored-Central</a>
-    
+
                   <div class="otherButtons">
                     <img class="hotbar_button" v-on:click="toggle_hotbar()" src="ui imgs/search icon.png" alt="controller" >
                     <img class="hotbar_button" v-on:click="toggle_hotbarA()" v-if="showHotbarDiv" src="ui imgs/menu.png" alt="controller">
                     <div class="hotbarA" v-show="hotbarAOn">
-                      <div class='hotbarA_top'>  
+                      <div class='hotbarA_top'>
                         <div @click='toggle_hotbarA()' class="exit_hotbarA">X</div>
                       </div>
                     </div>
@@ -52,7 +52,7 @@
                       <div class="resultBox">
                         <div v-for="(result, index) in filteredResults" class="sResults" v-if="search && filteredResults.length">
                           <div><a v-bind:href="result.url"><img class="gameResult" v-bind:src="result.img"></a></div>
-                          
+
 
 
                         </div>
@@ -62,18 +62,18 @@
                         <div class="logB"><br>
                           <h5 class="platext1"> Log-In </h5>
                         </div>
-  
+
                       </a>
                       <a v-if="showLogOutDiv" @click="sign_Out" class="lbutton">
                         <div class="logB"><br>
                           <h5 class="platext1"> Log-Out </h5>
                         </div>
-  
+
                       </a>
                       <!-- Log In Dropdown -->
                       <div class="loghotbar" v-show="loghotbarOn">
                         <div class='loghotbar_top'>
-                            
+
                             <div @click='toggle_loghotbar()' class="exit_loghotbar">X</div>
                             <div class="logInBox">
 
@@ -84,9 +84,9 @@
                                   <img class="clearS clearSOffset" src="ui imgs/clearText.png" onClick="document.getElementById('NameInput').value = null">
                                 </div>
                               </div>
-                              
-                              
-                              
+
+
+
                               <div>
                                 <l class="logInPasswordText">Password:</l>
                                 <div class="logInBoxRow">
@@ -96,21 +96,21 @@
                                   <img class="clearS clearSOffset" src="ui imgs/clearText.png" onClick="document.getElementById('PasswordInput').value = null">
                                 </div>
                               </div>
-                              
+
 
                             </div>
-                              
+
                               <a class="lbutton2" @click="sign_In" >
                                 <div class="logB2"><br>
                                   <h5 class="platext1"> Log-In </h5>
                                 </div>
-        
+
                               </a>
                             <div class="newAccount">
                               <div class="newb"><br>
                                 <a href="New account.html" class="platext2 newbtext"> Dont have an Account? </a>
                               </div>
-        
+
                             </div>
                         </div>
                       </div>
@@ -119,24 +119,24 @@
                   </div>
                 </div>
             </nav>
-            
+
             <div class="body_box2">
-              
-              
-              
+
+
+
               <div class="grid-item bottom">
                 <div class="AllGamesBox">
 
-                  
+
                   <img class="bannerTopC" src="ui imgs/banner top.png">
-                  <div class="AllGames cataTitle3">All Games</div>                  
+                  <div class="AllGames cataTitle3">All Games</div>
                   <div class="contentBoxC">
-                    
+
                     <div class="contentBoxCGrid">
 
-                      <a href="" class="gamefontw grid4-item"><img class="gameMS" src="game_imgs/Minesweeper_game.png"><p></p></a>
-                      <a href="" class="gamefontw grid4-item"><img class="gameXO" src="game_imgs/XO_game.png"><p></p></a>
-                      <a href="" class="gamefontw grid4-item"><img class="gameWdl" src="game_imgs/wordle_game.png"><p></p></a>
+                      <a href="Minesweeper/public/index.html" class="gamefontw grid4-item"><img class="gameMS" src="game_imgs/Minesweeper_game.png"><p></p></a>
+                      <a href="Tic-Tac-Toe/index.html" class="gamefontw grid4-item"><img class="gameXO" src="game_imgs/XO_game.png"><p></p></a>
+                      <a href="Wordle/index.html" class="gamefontw grid4-item"><img class="Wordle" src="game_imgs/wordle_game.png"><p></p></a>
 
                       <a class="gamefontw grid4-item"><img class="gameSnk" src="game_imgs/snake_game.png"><p class="cap1">Not Implemented</p></a>
                       <a class="gamefontw grid4-item"><img class="gameChs" src="game_imgs/chess_game.png"><p class="cap1">Not Implemented</p></a>
@@ -161,33 +161,33 @@
                       <a href="" class="gamefont grid4-item Wip"><p class="cap1">Not Implemented</p></a>
                       <a href="" class="gamefont grid4-item Wip"><p class="cap1">Not Implemented</p></a>
 
-                     
-                      
+
+
 
 
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
 
-              
+
             </div>
 
-            
+
             <div class="footer">
               <div class="footerText2">
                 <a href="" class="ContactUs link">Contact Us *</a>
                 <a href="" class="LeaveADonation link">Leave a Donation *</a>
                 <a href="" class="MoreInformation link">More Information *</a>
               </div><br>
-              
+
               <div class="Line"></div><br>
               <div class="footerText">
                 <div class="footerT1">
                   <div class="Copyright">Copyright----- </div>
                 </div>
-                
+
                 <div class="footerT2">
                   <a href="" class="PrivacyPolicy link">Privacy policy</a>
                   <div class="footerLine">|</div>
@@ -195,23 +195,23 @@
                   <div class="footerLine">|</div>
                   <a href="" class="Legal link">Legal</a>
                 </div>
-                
+
                 <div class="footerT3">
                   <div class="UnitedStates">United States</div>
                 </div>
-                
-                
-                
-              </div>
-              
-            </div>
-            
-            
-          </div>    
-            
-        
 
-        
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+
+
     </div>
     <script src="app.js"></script>
 </body>

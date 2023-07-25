@@ -1,0 +1,52 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  background-color: rgba(78, 133, 78, 0.699);
+}
+
+h1 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 50px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.guess {
+  display: flex;
+  justify-content: center;
+}
+
+.letter {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+  text-align: center;
+  margin-top: 10px;
+  width: 56px;
+  height: 56px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  font-size: 50px;
+  text-transform: uppercase;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+}
+
+#message {
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+  font-size: 32px;
+}
+
+.green {
+  background-color: green;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.wrong {
+  background-color: grey;
+}
