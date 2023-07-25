@@ -27,6 +27,8 @@ a {
 
 nav {
   display: flex;
+  border-bottom-left-radius: 5rem;
+  box-shadow: (0.2, 0, 0, 0);
   justify-content: right;
 }
 
@@ -45,6 +47,16 @@ nav {
   position: relative;
   margin-top: 20px;
   margin-left: 50px;
+}
+
+.title a {
+  text-decoration: none;
+  color: black;
+}
+
+.title a:hover {
+  cursor: pointer;
+  transform: scale(1.01);
 }
 
 .hotbar_button {
@@ -116,7 +128,8 @@ nav {
   flex-flow: row;
   justify-content: center;
   align-items: center;
-  border: 2px solid black;
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 3px;
 }
 
 .row {
@@ -136,7 +149,6 @@ nav {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  border: 1px solid black;
 }
 
 .tile.Intermediate {
@@ -149,7 +161,6 @@ nav {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  border: 1px solid black;
 }
 
 .tile.Hard {
@@ -162,7 +173,6 @@ nav {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  border: 1px solid black;
 }
 
 .tile:hover {
@@ -179,8 +189,8 @@ nav {
   width: 2.75rem;
   font-size: 20px;
   font-family: minesweeper;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid black;
+  background-color: rgb(228, 228, 228);
+  border: 1px solid rgb(128, 128, 128);
 }
 
 .clicked.Intermediate {
@@ -191,8 +201,8 @@ nav {
   width: 2.25rem;
   font-size: 16px;
   font-family: minesweeper;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid black;
+  background-color: rgb(228, 228, 228);
+  border: 1px solid rgb(128, 128, 128);
 }
 
 .clicked.Hard {
@@ -203,11 +213,12 @@ nav {
   width: 2rem;
   font-size: 12px;
   font-family: minesweeper;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid black;
+  background-color: rgb(228, 228, 228);
+  border: 1px solid rgb(128, 128, 128);
 }
 
 .mine.Beginner {
+  background-color: rgba(255, 0, 0, 0.729);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -221,6 +232,7 @@ nav {
 }
 
 .mine.Intermediate {
+  background-color: rgba(255, 0, 0, 0.729);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -235,6 +247,7 @@ nav {
 
 .mine.Hard {
   display: flex;
+  background-color: rgba(255, 0, 0, 0.729);
   justify-content: center;
   align-items: center;
   height: 2rem;
@@ -251,12 +264,7 @@ nav {
   flex-flow: column nowrap;
 }
 
-.gameStatus {
-  display: flex;
-  justify-content: center;
-}
-
-/* difficulty page code */
+/* _______________difficulty page code _______________ */
 
 .titleDiff {
   margin-top: 36px;
@@ -333,7 +341,6 @@ nav {
 .box {
   display: flex;
   height: auto;
-  font-family: "Gemunu Libre", sans-serif;
   color: rgb(221, 0, 0);
   font-size: 2.5rem;
   background-color: rgb(195, 195, 195);
@@ -366,11 +373,14 @@ nav {
   height: 2.5rem;
   text-align: center;
   border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 }
 
 .restart:hover {
-  cursor: pointer;
-  background-color: rgb(128, 128, 128, 0.6);
+  filter: opacity(60%);
+  transform: rotate(90deg) scale(1.07);
+  transition: 0.2s;
 }
 
 .flagged.Beginner {
@@ -596,8 +606,6 @@ nav {
   height: 123px;
   width: 235px;
 
-  margin-top: 30px;
-
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -635,14 +643,21 @@ nav {
   height: 123px;
   width: 235px;
 
-  margin-top: -270px;
-
-  align-items: center;
-  justify-content: center;
   text-align: center;
 }
 
-.gameOverObject {
+.blur {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: rgb(0, 0, 0, 0.5);
+  height: 27.5rem;
+  width: 27.5rem;
+}
+
+.lose {
   font-size: 23px;
   font-family: Minesweeper;
   color: rgb(246, 26, 26);

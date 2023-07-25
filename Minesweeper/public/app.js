@@ -291,18 +291,20 @@ Vue.createApp({
 
     flag: function (row) {
       if (this.gameOver == false && this.win == false) {
-        if (this.currentMines > 0) {
-          if (row.flag == "") {
-            row.flag = "flagged";
-            this.currentMines -= 1;
+        if (row.class == "tile") {
+          if (this.currentMines > 0) {
+            if (row.flag == "") {
+              row.flag = "flagged";
+              this.currentMines -= 1;
+            } else {
+              row.flag = "";
+              this.currentMines += 1;
+            }
           } else {
-            row.flag = "";
-            this.currentMines += 1;
-          }
-        } else {
-          if (row.flag == "flagged") {
-            row.flag = "";
-            this.currentMines += 1;
+            if (row.flag == "flagged") {
+              row.flag = "";
+              this.currentMines += 1;
+            }
           }
         }
       }
@@ -368,7 +370,6 @@ Vue.createApp({
       this.restarted = true;
       this.setTimer();
       this.currentMines = this.activeDifficulty[0].mines;
-      this.timer = false;
       this.win = false;
       this.gameOver = false;
       this.tiles = [];
@@ -383,39 +384,46 @@ Vue.createApp({
       this.hotbarOn = false;
     },
     setTimer() {
-      this.timer = true;
-      var gametime = setInterval(() => {
-        if (this.seconds < 59) {
-          this.seconds++;
-        } else {
-          this.seconds = 0;
-          this.minutes++;
-        }
+      if (this.timer) {
         if (this.restarted == true) {
           setTimeout(() => {
             this.seconds = 0;
             this.minutes = 0;
           }, 100);
           clearInterval(gametime);
+          this.timer = false;
         }
         if (this.gameOver == true) {
           clearInterval(gametime);
+          this.timer = false;
         }
         if (this.win) {
           clearInterval(gametime);
+          this.timer = false;
         }
-      }, 1100);
+      } else {
+        this.timer = true;
+        var gametime = setInterval(() => {
+          if (this.seconds < 59) {
+            this.seconds++;
+          } else {
+            this.seconds = 0;
+            this.minutes++;
+          }
+        }, 1100);
+      }
     },
     startTimer() {
       if (this.timer == false) {
         this.setTimer();
+        this.timer = true;
       }
     },
     connect: function () {
       const protocol = window.location.protocol.includes("https")
         ? "wss"
         : "ws";
-      this.socket = new WebSocket(`${protocol}://localhost:8080`);
+      this.socket = new WebSocket(`${protocol}://69.21.225.18:8080`);
       this.socket.onopen = function () {
         console.log("Connected to websocket");
       };

@@ -36,6 +36,57 @@ wss.on("request", (request) => {
     // I have receieved a message from a client
     const result = JSON.parse(message.utf8Data);
     console.log(result);
+    // Creation of a new game
+    if (result.method === "create") {
+      const clientID = result.clientID;
+      const gameID = guid();
+      games[gameID] = {
+        id: gameID,
+        balls: 20,
+        clients: [],
+      };
+
+      const payLoad = {
+        method: "create",
+        game: games[gameID],
+      };
+
+      const con = clients[clientID].connection;
+      con.send(JSON.stringify(payLoad));
+    }
+
+    // If player wants to join an existing game
+    if (result.method === "join") {
+      const clientID = result.clientID;
+      const gameID = result.gameID;
+      const game = games[gameID];
+      if (game.clients.length >= 2) {
+        // Max players reached
+        return;
+      }
+      game.clients.push({ clientID: clientID });
+
+      if (game.clients.length === 2) updateGameState();
+
+      const payLoad = {
+        method: "join",
+        game: game,
+      };
+
+      // Loop through all clients and tell them that other clients have joined
+      game.clients.forEach((c) => {
+        clients[c.clientID].connection.send(JSON.stringify(payLoad));
+      });
+    }
+
+    if (result.method === "play") {
+      const gameID = result.gameID;
+      const ballID = result.ballID;
+      let state = games[gameID].state;
+      if (!state) state = {};
+
+      state[ballID] = color;
+    }
   });
 
   //generate a new clientID
@@ -52,15 +103,32 @@ wss.on("request", (request) => {
   connection.send(JSON.stringify(payLoad));
 });
 
+function updateGameState() {
+  //{"gameid", fasdfsf}
+  for (const g of Object.keys(games)) {
+    const game = games[g];
+    const payLoad = {
+      method: "update",
+      game: game,
+    };
+
+    game.clients.forEach((c) => {
+      clients[c.clientId].connection.send(JSON.stringify(payLoad));
+    });
+  }
+
+  setTimeout(updateGameState, 500);
+}
+
 function S4() {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring;
 }
 // to call the clientID creation tool
-const clientIDcreation = () => S4() + S4() + "_" + S4() + "-4" + S4().substr;
+const guid = () => S4() + S4() + "_" + S4() + "-4" + S4().substr;
 
 // wss.on("connection", function (ws) {
 //   // This is the new client connection
-//   console.log("New `ws` client connected");
+//   console.log("New 'ws' client connected");
 
 //   var playerID = ws;
 
@@ -74,15 +142,15 @@ const clientIDcreation = () => S4() + S4() + "_" + S4() + "-4" + S4().substr;
 //   });
 // });
 
-app.post("/messages", function (req, res) {
-  // Handle message through HTTP
-  console.log("Got a message through HTTP: ", req.body.message);
-  broadcast(req.body.message);
-  res.sendStatus(200);
-});
+// app.post("/messages", function (req, res) {
+//   // Handle message through HTTP
+//   console.log("Got a message through HTTP: ", req.body.message);
+//   broadcast(req.body.message);
+//   res.sendStatus(200);
+// });
 
-function broadcast(message) {
-  wss.clients.forEach((client) => {
-    client.send(message);
-  });
-}
+// function broadcast(message) {
+//   wss.clients.forEach((client) => {
+//     client.send(message);
+//   });
+// }

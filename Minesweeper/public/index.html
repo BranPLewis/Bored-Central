@@ -7,13 +7,16 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <title>Minesweeper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div id="app">
         <nav>
             <div class="navigation">
-                <div class="title">Bored-Central</div>
+                <div class="title"><a href="../../index.html">Bored-Central</a></div>
                 <img class="hotbar_button" @click="toggle_hotbar()" src="img/menu.png" alt="controller">
             </div>
             <div class="hotbar" v-show="hotbarOn">
@@ -41,7 +44,7 @@
                 <div class="column" v-for="col in tiles">
                     <div class="row" v-for="row in col">
                         <div
-                        @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0])"
+                        @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),setTimer(),checkWin(this.activeDifficulty[0])"
                         :class="[row.class, row.color, row.flag, row.difficulty]"
                         @contextmenu.prevent
                         @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
@@ -105,14 +108,16 @@
 
                 <!-- --------------- -->
 
-                <div class="winBox" v-show="win">
-                    <div class="winning">You Win!</div>
+                <div class="blur" v-show="win">
+                    <div class="winBox">
+                        <div class="winning">You Win!</div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="gameStatus">
-            <div class="loseBox" v-show="gameOver">
-                <div class="gameOverObject" >Game Over</div>
+                <div class="blur" v-show="gameOver">
+                    <div class="loseBox">
+                        <div class="lose" >Game Over</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
