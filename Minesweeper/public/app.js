@@ -1,7 +1,13 @@
 Vue.createApp({
   data() {
     return {
-      descriptionPage: true,
+      // Server Information
+      clientId: null,
+      gameId: "",
+      username: "",
+      game: null,
+      allGames: null,
+
       minutes: 0,
       seconds: 0,
       timer: false,
@@ -16,21 +22,54 @@ Vue.createApp({
       HTTPmessage: "",
       socket: null,
       tileOn: true,
-      difficultySelection: false,
+      descriptionPage: true,
+      singleplayerDifficultyPage: false,
+      multiplayerDifficultyPage: false,
+      serverPage: false,
+      createServerPage: false,
+      joinServerPage: false,
       gameOver: false,
       win: false,
+      winBeginner: false,
+      gameOverBeginner: false,
+      winIntermediate: false,
+      gameOverIntermediate: false,
+      winHard: false,
+      gameOverHard: false,
+      socket: null,
       mines: [],
       tiles: [],
     };
   },
   methods: {
-    descriptionSwitch: function () {
+    SingleplayerSwitch: function () {
       this.descriptionPage = false;
-      this.difficultySelection = true;
+      this.singleplayerDifficultyPage = true;
+    },
+
+    MultiplayerSwitch: function () {
+      this.descriptionPage = false;
+      this.serverPage = true;
+    },
+
+    createServerToggle: function () {
+      this.serverPage = false;
+      this.createServerPage = true;
+    },
+
+    serverCreated: function () {
+      this.createServerPage = false;
+      this.multiplayerDifficultyPage = true;
+    },
+
+    joinServerToggle: function () {
+      this.serverPage = false;
+      this.joinServerPage = true;
     },
 
     difficultySwitch: function () {
-      this.difficultySelection = false;
+      this.singleplayerDifficultyPage = false;
+      this.multiplayerDifficultyPage = false;
     },
 
     changeDifficultytoBeginner() {
@@ -93,6 +132,15 @@ Vue.createApp({
       console.log(num);
       if (num == maxNum) {
         this.win = true;
+        if (this.activeDifficulty[0].title == "Beginner") {
+          this.winBeginner = true;
+        }
+        if (this.activeDifficulty[0].title == "Intermediate") {
+          this.winIntermediate = true;
+        }
+        if (this.activeDifficulty[0].title == "Hard") {
+          this.winHard = true;
+        }
         this.winExec();
         console.log("You win!");
       }
@@ -282,6 +330,15 @@ Vue.createApp({
             }
           } else {
             this.gameOver = true;
+            if (this.activeDifficulty[0].title == "Beginner") {
+              this.gameOverBeginner = true;
+            }
+            if (this.activeDifficulty[0].title == "Intermediate") {
+              this.gameOverIntermediate = true;
+            }
+            if (this.activeDifficulty[0].title == "Hard") {
+              this.gameOverHard = true;
+            }
             this.gameOverExec(this.Beginner);
             row.class = "mine";
           }
@@ -371,6 +428,12 @@ Vue.createApp({
       this.setTimer();
       this.currentMines = this.activeDifficulty[0].mines;
       this.win = false;
+      this.winBeginner = false;
+      this.winIntermediate = false;
+      this.winHard = false;
+      this.gameOverBeginner = false;
+      this.gameOverIntermediate = false;
+      this.gameOverHard = false;
       this.gameOver = false;
       this.tiles = [];
       this.mines = [];
@@ -419,41 +482,114 @@ Vue.createApp({
         this.timer = true;
       }
     },
+
+    joinServerOnCreation: function () {
+      const payLoad = {
+        method: "join",
+        username: this.username,
+        clientId: this.clientId,
+        gameId: this.gameId,
+      };
+      console.log(this.allGames);
+      this.socket.send(JSON.stringify(payLoad));
+    },
+
+    joinServer: function () {
+      const payLoad = {
+        method: "join",
+        username: this.username,
+        clientId: this.clientId,
+        gameId: this.gameId,
+      };
+      this.socket.send(JSON.stringify(payLoad));
+    },
+
+    createServer: function () {
+      if (this.gameId === "") {
+        console.log("That is not a valid Game ID");
+      } else {
+        var payLoad = {
+          method: "create",
+          clientId: this.clientId,
+          gameId: this.gameId,
+        };
+        this.socket.send(JSON.stringify(payLoad));
+      }
+    },
+
     connect: function () {
-      const protocol = window.location.protocol.includes("https")
-        ? "wss"
-        : "ws";
-      this.socket = new WebSocket(`${protocol}://69.21.225.18:8080`);
-      this.socket.onopen = function () {
-        console.log("Connected to websocket");
-      };
-      this.socket.onmessage = function (event) {
-        console.log("Test:", event.data);
-      };
-    },
-    HTTPtest: function () {
-      fetch("/messages", {
-        method: "post",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          message: this.HTTPmessage,
-        }),
-      })
-        .then((response) => {
-          console.log("HTTP message was sent through websocket");
-        })
-        .catch((error) => {
+      // 1: Connect to websocket
+      // const protocol = window.location.protocol.includes("https")
+      //   ? "wss"
+      //   : "ws";
+      this.socket = new WebSocket(`ws://localhost:9090`);
+      // this.socket.onopen = function () {
+      //   console.log("Connected to websocket");
+      // };
+      this.socket.onmessage = (message) => {
+        const response = JSON.parse(message.data);
+        if (response.method === "connect") {
+          var clientID = response.clientId;
+          console.log("Client id Set successfully " + clientID);
+          this.clientId = clientID;
+        }
+
+        //create
+        if (response.method === "create") {
+          this.game = response.game;
+          this.allGames = response.games;
+          console.log(this.allGames);
+          console.log(
+            "Game created Succesfully " + "Game ID: " + response.game.id
+          );
+        }
+
+        //join
+        if (response.method === "join") {
+          const game = response.game;
+
+          while (divPlayers.firstChild)
+            divPlayers.removeChild(divPlayers.firstChild);
+
+          game.clients.forEach((c) => {
+            const d = document.createElement("div");
+            d.style.width = "200px";
+            d.style.background = c.color;
+            d.textContent = c.username;
+            divPlayers.appendChild(d);
+
+            if (c.clientId === clientId) playerColor = c.color;
+          });
+
+          while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+
+          for (let i = 0; i < game.balls; i++) {
+            const b = document.createElement("button");
+            b.id = "ball" + (i + 1);
+            b.tag = i + 1;
+            b.textContent = i + 1;
+            b.style.width = "150px";
+            b.style.height = "150px";
+            b.addEventListener("click", (e) => {
+              b.style.background = playerColor;
+              const payLoad = {
+                method: "play",
+                clientId: clientId,
+                gameId: gameId,
+                ballId: b.tag,
+                color: playerColor,
+              };
+              ws.send(JSON.stringify(payLoad));
+            });
+            divBoard.appendChild(b);
+          }
+        }
+
+        // messages
+        if (response.method === "message") {
+          const error = response.message;
           console.log(error);
-        });
-    },
-    SocketTest: function () {
-      this.socket.send(this.Socketmessage);
-    },
-    getMessageWS: function () {
-      this.socket.onmessage = function (event) {
-        console.log(event.data);
+        }
       };
     },
   },

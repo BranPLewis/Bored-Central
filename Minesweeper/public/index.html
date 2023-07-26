@@ -8,8 +8,8 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <title>Minesweeper</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -85,7 +85,8 @@
 
                             </div>
                             <div>
-                                <a class="descBoxStartButton" @click="descriptionSwitch()">PLAY</a>
+                                <a class="descBoxSingleplayerButton descHoverable" @click="SingleplayerSwitch()">Singleplayer</a>
+                                <a class="descBoxMultiplayerButton descHoverable" @click="MultiplayerSwitch()">Multiplayer</a>
                             </div>
                         </div>
 
@@ -95,9 +96,9 @@
 
                 <!-- --------------- -->
 
-                <!-- difficulty page -->
+                <!-- singleplayer difficulty page -->
 
-                <div class="diffBox" v-show="difficultySelection">
+                <div class="diffBox" v-show="singleplayerDifficultyPage">
                     <div class="diffContentBox">
                         <p class="titleDiff">Difficulty:</p>
                         <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</a>
@@ -106,14 +107,85 @@
                     </div>
                 </div>
 
-                <!-- --------------- -->
+                <!-- multiplayer difficulty page -->
 
-                <div class="blur" v-show="win">
+                <div class="diffBox" v-show="multiplayerDifficultyPage">
+                    <div class="diffContentBox">
+                        <p class="titleDiff">Difficulty:</p>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Beginner</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Intermediate</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Hard</a>
+                    </div>
+                </div>
+
+                <!-- Server Page -->
+
+                <div class="serverBox" v-show="serverPage">
+                    <div class="serverContentBox">
+                        <p class="serverTitle">Minesweeper Multiplayer:</p>
+                        <a class="serverOption" @click="createServerToggle()">Create Server</a>
+                        <a class="serverOption" @click="joinServerToggle()">Join Server</a>
+                    </div>
+                </div>
+
+                <!-- ----------- -->
+
+                <!-- Create Server Page -->
+
+                <div class="createServerBox" v-show="createServerPage">
+                    <div class="createServerContentBox">
+                        <p class="createServerTitle">Server Creation:</p>
+                        <p class="createServerHead">Username:</p>
+                        <input v-model="username" id="username" class="serverNameInput" type="text" placeholder="Your Username">
+                        <p class="usernameHead">Server ID:</p>
+                        <input v-model="gameId" id="gameID" class="serverNameInput" type="text" placeholder="Server ID">
+                        <a class="createServerOption" id="createServer" @click="serverCreated()">Create Server</a>
+                    </div>
+                </div>
+
+                <!-- ----------- -->
+
+                <!-- Join Server Page -->
+
+                <div class="createServerBox" v-show="joinServerPage">
+                    <div class="createServerContentBox">
+                        <p class="createServerTitle">Server Join:</p>
+                        <p class="createServerHead">Username:</p>
+                        <input v-model="username" id="username" class="serverNameInput" type="text" placeholder="Your Username">
+                        <p class="usernameHead">Server ID:</p>
+                        <input v-model="gameId" id="gameID" class="serverNameInput" type="text" placeholder="Server ID">
+                        <a class="createServerOption" id="createServer" @click="joinServer()">Join Server</a>
+                    </div>
+                </div>
+
+                <!-- ----------- -->
+
+                <div class="blurBeginner" v-show="winBeginner">
                     <div class="winBox">
                         <div class="winning">You Win!</div>
                     </div>
                 </div>
-                <div class="blur" v-show="gameOver">
+                <div class="blurBeginner" v-show="gameOverBeginner">
+                    <div class="loseBox">
+                        <div class="lose" >Game Over</div>
+                    </div>
+                </div>
+                <div class="blurIntermediate" v-show="winIntermediate">
+                    <div class="winBox">
+                        <div class="winning">You Win!</div>
+                    </div>
+                </div>
+                <div class="blurIntermediate" v-show="gameOverIntermediate">
+                    <div class="loseBox">
+                        <div class="lose" >Game Over</div>
+                    </div>
+                </div>
+                <div class="blurHard" v-show="winHard">
+                    <div class="winBox">
+                        <div class="winning">You Win!</div>
+                    </div>
+                </div>
+                <div class="blurHard" v-show="gameOverHard">
                     <div class="loseBox">
                         <div class="lose" >Game Over</div>
                     </div>

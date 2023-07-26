@@ -1,13 +1,8 @@
+const http = require("http");
 const express = require("express");
+const app = express();
 const cors = require("cors");
 
-// 1: Require web sockets
-const WebSocket = require("ws");
-
-const clients = {};
-
-const app = express();
-const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.static("Minesweeper/public"));
 app.use(
@@ -19,13 +14,26 @@ app.use(
   })
 );
 
-// 2: Assign name to server
-const server = app.listen(port, function () {
-  console.log(`Running server on port ${port}...`);
+// 1: Require web sockets
+app.listen(9091, function () {
+  console.log("Listening on port 9091");
+});
+const websocketServer = require("websocket").server;
+const httpServer = http.createServer();
+httpServer.listen(9090, function () {
+  console.log("Listening.. on 9090");
 });
 
+const clients = {};
+const games = {};
+
+// 2: Assign name to server
+// const server = app.listen(8080, function () {
+//   console.log(`Listening server on port 8080`);
+// });
+
 // 3: Name websocket
-const wss = new WebSocket.Server({ server: server });
+const wss = new websocketServer({ httpServer: httpServer });
 
 wss.on("request", (request) => {
   //connect
@@ -38,73 +46,87 @@ wss.on("request", (request) => {
     console.log(result);
     // Creation of a new game
     if (result.method === "create") {
-      const clientID = result.clientID;
-      const gameID = guid();
-      games[gameID] = {
-        id: gameID,
-        balls: 20,
+      const clientId = result.clientId;
+      const gameId = result.gameId;
+      games[gameId] = {
+        id: gameId,
         clients: [],
       };
-
+      console.log(games);
       const payLoad = {
         method: "create",
-        game: games[gameID],
+        game: games[gameId],
+        games: games,
       };
 
-      const con = clients[clientID].connection;
+      const con = clients[clientId].connection;
       con.send(JSON.stringify(payLoad));
     }
 
     // If player wants to join an existing game
     if (result.method === "join") {
-      const clientID = result.clientID;
-      const gameID = result.gameID;
-      const game = games[gameID];
-      if (game.clients.length >= 2) {
-        // Max players reached
-        return;
+      const clientId = result.clientId;
+      const username = result.username;
+      const gameId = result.gameId;
+      console.log(gameId);
+      if (gameId in games) {
+        const game = games[gameId];
+        if (game.clients.length >= 2) {
+          // Max players reached
+          return;
+        }
+        game.clients.push({
+          username: username,
+          clientId: clientId,
+        });
+
+        if (game.clients.length === 2) updateGameState();
+
+        var payLoad = {
+          method: "join",
+          game: game,
+        };
+        console.log(games);
+        console.log(game.clients);
+        // Loop through all clients and tell them that other clients have joined
+        game.clients.forEach((c) => {
+          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        });
+      } else {
+        //kick off
+        payLoad = {
+          method: "message",
+          message: "That Game ID does not exist",
+        };
       }
-      game.clients.push({ clientID: clientID });
-
-      if (game.clients.length === 2) updateGameState();
-
-      const payLoad = {
-        method: "join",
-        game: game,
-      };
-
-      // Loop through all clients and tell them that other clients have joined
-      game.clients.forEach((c) => {
-        clients[c.clientID].connection.send(JSON.stringify(payLoad));
-      });
     }
 
     if (result.method === "play") {
-      const gameID = result.gameID;
+      const gameId = result.gameId;
       const ballID = result.ballID;
-      let state = games[gameID].state;
+      let state = games[gameId].state;
       if (!state) state = {};
 
       state[ballID] = color;
     }
   });
 
-  //generate a new clientID
-  const clientID = clientIDcreation();
-  clients[clientID] = {
+  //generate a new clientId
+  const clientId = guid();
+  clients[clientId] = {
     connection: connection,
   };
 
   const payLoad = {
     method: "connect",
-    clientID: clientID,
+    clientId: clientId,
   };
-  // send back the client connect
+  //send back the client connect
   connection.send(JSON.stringify(payLoad));
 });
 
 function updateGameState() {
-  //{"gameid", fasdfsf}
+  //{"gameId", fasdfsf}
   for (const g of Object.keys(games)) {
     const game = games[g];
     const payLoad = {
@@ -120,11 +142,28 @@ function updateGameState() {
   setTimeout(updateGameState, 500);
 }
 
+// Randomly generated clientId
+
 function S4() {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring;
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
-// to call the clientID creation tool
-const guid = () => S4() + S4() + "_" + S4() + "-4" + S4().substr;
+
+//then to call it, plus stitch in '4' in the third group
+const guid = () =>
+  (
+    S4() +
+    S4() +
+    "-" +
+    S4() +
+    "-4" +
+    S4().substr(0, 3) +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    S4() +
+    S4()
+  ).toLowerCase();
 
 // wss.on("connection", function (ws) {
 //   // This is the new client connection
