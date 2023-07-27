@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Minesweeper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+
+        <!---------- NAV BAR -------->
+        <nav>
+            <div class="navigation">
+                <div class="title">Bored-Central</div>
+                <img class="hotbar_button" @click="toggle_hotbar()" src="img/menu.png" alt="controller">
+            </div>
+            <div class="hotbar" v-show="hotbarOn">
+                <div class='hotbar_top'>
+                    <input class="hotbar_search"></input>
+                    <div @click='hotbarOff()' class="exit_hotbar">X</div>
+                </div>
+            </div>
+        </nav>
+
+
+        <!-- GAME TITLE-->
+        <div class="gameTitle">
+            Minesweeper <div><img src='img/bomb.png'></img></div>
+        </div>
+
+
+        <div class="boardHeader">
+            <div class='box'>
+                <div><img src='img/flagIcon.svg'></img></div>
+                <div class='data'>{{currentMines}}</div>
+            </div>
+            <div class='box'>
+                <div class="restart" @click="restart(this.activeDifficulty[0])"><img src='img/restart.png'></img></div>
+            </div>
+            <div class='box'>
+                <div><img src='img/stopwatch.svg'></img></div>
+                <div class='data'>{{formatTimer}}</div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div id="board">
+                <div class="column" v-for="col in tiles">
+                    <div class="row" v-for="row in col">
+                        <div
+                        @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0])"
+                        :class="[row.class, row.color, row.flag, row.difficulty]"
+                        @contextmenu.prevent
+                        @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
+                        >
+                        {{row.number}}
+                    </div>
+                    </div>
+                </div>
+
+                <!-- description page -->
+
+                <div class="descBox" v-show="descriptionPage">
+                    <div class="descContentBox">
+
+                        <h2 class="minesweeperTitle">Minesweeper</h3>
+                        <h3 class="descBoxTitle">How To Play</h3>
+
+                        <div class="descTextBox">
+                            <p class="descText">
+                                In this game you are presented with a board of squares.
+                                 Some squares contain mines, others squares don't. Clicking a square which doesn't have a mine reveals the number of neighbouring squares containing mines.
+                                 For example if a square contains a 1 then there is a mine in one of the surrounding squares and so on. If you click on a square containing a mine,
+                                 you lose. If there is a square which you think may contain a mine, you can place a flag to mark it. If you manage to open up all the squares without clicking on a mine, you win.
+
+                            </p>
+                        </div>
+                        <div class="descBoxBottom">
+                            <div class="descControlsBox">
+                                <h4 class="descControlsTitle">Controls</h4>
+                                <div class="controlLbox">
+                                    <p class="controlL controlLtop">Left-Click:</p>
+                                    <p class="controlL">Reveal any square</p>
+                                </div>
+                                <div class="controlRbox">
+                                    <p class="controlR controlRtop">Right-Click:</p>
+                                    <p class="controlR">Place a flag</p>
+                                </div>
+
+                            </div>
+                            <div>
+                                <a class="descBoxStartButton" @click="descriptionSwitch()">PLAY</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- --------------- -->
+
+                <!-- difficulty page -->
+
+                <div class="diffBox" v-show="difficultySelection">
+                    <div class="diffContentBox">
+                        <p class="titleDiff">Difficulty:</p>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0])">Intermediate</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0])">Hard</a>
+                    </div>
+                </div>
+
+                <!-- --------------- -->
+
+                <div class="winBox" v-show="win">
+                    <div class="winning">You Win!</div>
+                </div>
+                <div class="loseBox" v-show="gameOver">
+                    <div class="gameOverObject" >Game Over</div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
