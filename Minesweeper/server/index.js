@@ -26,6 +26,9 @@ httpServer.listen(9090, function () {
 
 const clients = {};
 const games = {};
+var gameBoard = null;
+var difficulty = null;
+var playerNames = [];
 
 // 2: Assign name to server
 // const server = app.listen(8080, function () {
@@ -48,15 +51,18 @@ wss.on("request", (request) => {
     if (result.method === "create") {
       const clientId = result.clientId;
       const gameId = result.gameId;
+      gameBoard = result.board;
+      difficulty = result.difficulty;
       games[gameId] = {
         id: gameId,
+        board: gameBoard,
+        difficulty: difficulty,
         clients: [],
       };
       console.log(games);
       const payLoad = {
         method: "create",
         game: games[gameId],
-        games: games,
       };
 
       const con = clients[clientId].connection;
@@ -68,7 +74,6 @@ wss.on("request", (request) => {
       const clientId = result.clientId;
       const username = result.username;
       const gameId = result.gameId;
-      console.log(gameId);
       if (gameId in games) {
         const game = games[gameId];
         if (game.clients.length >= 2) {
@@ -80,14 +85,16 @@ wss.on("request", (request) => {
           clientId: clientId,
         });
 
-        if (game.clients.length === 2) updateGameState();
+        if (playerNames) playerNames.push(username);
+        console.log(playerNames);
 
         var payLoad = {
           method: "join",
           game: game,
+          username: username,
+          difficulty: difficulty,
+          gameId: gameId,
         };
-        console.log(games);
-        console.log(game.clients);
         // Loop through all clients and tell them that other clients have joined
         game.clients.forEach((c) => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad));
@@ -98,16 +105,36 @@ wss.on("request", (request) => {
           method: "message",
           message: "That Game ID does not exist",
         };
+        const con = clients[clientId].connection;
+        con.send(JSON.stringify(payLoad));
       }
     }
 
     if (result.method === "play") {
-      const gameId = result.gameId;
-      const ballID = result.ballID;
-      let state = games[gameId].state;
-      if (!state) state = {};
+      if (result.gameMode == "multiplayer") {
+        const gameId = result.gameId;
+        const game = games[gameId];
+        const username = result.username;
+        const board = result.board;
+        const clientId = result.clientId;
+        const win = result.win;
+        const gameOver = result.gameOver;
 
-      state[ballID] = color;
+        payLoad = {
+          method: "play",
+          board: board,
+          username: username,
+          clientId: clientId,
+          win: win,
+          gameOver: gameOver,
+        };
+
+        game.clients.forEach((c) => {
+          if (c.clientId !== clientId) {
+            clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          }
+        });
+      }
     }
   });
 
@@ -124,23 +151,6 @@ wss.on("request", (request) => {
   //send back the client connect
   connection.send(JSON.stringify(payLoad));
 });
-
-function updateGameState() {
-  //{"gameId", fasdfsf}
-  for (const g of Object.keys(games)) {
-    const game = games[g];
-    const payLoad = {
-      method: "update",
-      game: game,
-    };
-
-    game.clients.forEach((c) => {
-      clients[c.clientId].connection.send(JSON.stringify(payLoad));
-    });
-  }
-
-  setTimeout(updateGameState, 500);
-}
 
 // Randomly generated clientId
 

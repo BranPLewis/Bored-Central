@@ -4,9 +4,11 @@ Vue.createApp({
       // Server Information
       clientId: null,
       gameId: "",
-      username: "",
       game: null,
       allGames: null,
+      usernames: [],
+      gameMode: "",
+      OPusername: "",
 
       minutes: 0,
       seconds: 0,
@@ -36,12 +38,37 @@ Vue.createApp({
       gameOverIntermediate: false,
       winHard: false,
       gameOverHard: false,
+      opponentExists: false,
+      restartToggle: true,
+      OPusernameToggle: false,
+      standby: false,
       socket: null,
       mines: [],
       tiles: [],
+      OPtiles: [],
     };
   },
   methods: {
+    gameModeSingle: function () {
+      this.gameMode = "singlePlayer";
+    },
+
+    gameModeMulti: function () {
+      this.gameMode = "multiplayer";
+    },
+
+    opponentSwitchOff: function () {
+      this.opponentExists = false;
+      this.restartToggle = true;
+      this.OPusernameToggle = false;
+    },
+
+    opponentSwitchOn: function () {
+      this.opponentExists = true;
+      this.restartToggle = false;
+      this.OPusernameToggle = true;
+    },
+
     SingleplayerSwitch: function () {
       this.descriptionPage = false;
       this.singleplayerDifficultyPage = true;
@@ -415,6 +442,32 @@ Vue.createApp({
       }
     },
 
+    OPgenerateBoard: function (difficulty) {
+      var diff = difficulty;
+      var rowNum = 0;
+      var colNum = 0;
+      for (let i = 0; i < diff.col; i++) {
+        const column = [];
+        for (let j = 0; j < diff.row; j++) {
+          tile = {
+            mine: false,
+            class: "OPtile",
+            number: "",
+            color: "",
+            flag: "",
+            difficulty: diff.title,
+            col: colNum,
+            row: rowNum,
+          };
+          rowNum += 1;
+          column.push(tile);
+        }
+        colNum += 1;
+        rowNum = 0;
+        this.OPtiles.push(column);
+      }
+    },
+
     gameOverExec: function () {
       this.timer = false;
       for (i = 0; i < this.mines.length; i++) {
@@ -483,6 +536,21 @@ Vue.createApp({
       }
     },
 
+    serverPlay: function () {
+      const payLoad = {
+        method: "play",
+        gameMode: this.gameMode,
+        difficulty: this.activeDifficulty[0],
+        username: this.username,
+        clientId: this.clientId,
+        win: this.win,
+        gameOver: this.gameOver,
+        board: this.tiles,
+        gameId: this.gameId,
+      };
+      this.socket.send(JSON.stringify(payLoad));
+    },
+
     joinServerOnCreation: function () {
       const payLoad = {
         method: "join",
@@ -490,7 +558,6 @@ Vue.createApp({
         clientId: this.clientId,
         gameId: this.gameId,
       };
-      console.log(this.allGames);
       this.socket.send(JSON.stringify(payLoad));
     },
 
@@ -512,6 +579,8 @@ Vue.createApp({
           method: "create",
           clientId: this.clientId,
           gameId: this.gameId,
+          board: this.tiles,
+          difficulty: this.activeDifficulty[0],
         };
         this.socket.send(JSON.stringify(payLoad));
       }
@@ -538,7 +607,6 @@ Vue.createApp({
         if (response.method === "create") {
           this.game = response.game;
           this.allGames = response.games;
-          console.log(this.allGames);
           console.log(
             "Game created Succesfully " + "Game ID: " + response.game.id
           );
@@ -547,41 +615,33 @@ Vue.createApp({
         //join
         if (response.method === "join") {
           const game = response.game;
-
-          while (divPlayers.firstChild)
-            divPlayers.removeChild(divPlayers.firstChild);
-
-          game.clients.forEach((c) => {
-            const d = document.createElement("div");
-            d.style.width = "200px";
-            d.style.background = c.color;
-            d.textContent = c.username;
-            divPlayers.appendChild(d);
-
-            if (c.clientId === clientId) playerColor = c.color;
-          });
-
-          while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
-
-          for (let i = 0; i < game.balls; i++) {
-            const b = document.createElement("button");
-            b.id = "ball" + (i + 1);
-            b.tag = i + 1;
-            b.textContent = i + 1;
-            b.style.width = "150px";
-            b.style.height = "150px";
-            b.addEventListener("click", (e) => {
-              b.style.background = playerColor;
-              const payLoad = {
-                method: "play",
-                clientId: clientId,
-                gameId: gameId,
-                ballId: b.tag,
-                color: playerColor,
-              };
-              ws.send(JSON.stringify(payLoad));
+          const username = response.username;
+          const difficulty = response.difficulty;
+          if (this.activeDifficulty.length == 0) {
+            this.activeDifficulty.push(difficulty);
+          }
+          this.currentMines = difficulty.mines;
+          const gameId = response.gameId;
+          var players = this.usernames;
+          this.joinServerPage = false;
+          if (game.clients.length > 1) {
+            this.standby = false;
+            console.log(game.clients);
+            game.clients.forEach((i) => {
+              console.log(i.username);
+              let player = i.username;
+              this.usernames.push(player);
             });
-            divBoard.appendChild(b);
+            console.log(this.usernames);
+            var payLoad = {
+              method: "users",
+            };
+            if (game.clients[1].username === username) {
+              this.generateBoard(difficulty);
+              this.OPgenerateBoard(difficulty);
+            }
+          } else {
+            this.standby = true;
           }
         }
 
@@ -589,6 +649,51 @@ Vue.createApp({
         if (response.method === "message") {
           const error = response.message;
           console.log(error);
+        }
+
+        //updating each opponents board
+        if (response.method === "play") {
+          const board = response.board;
+          const win = response.win;
+          const gameOver = response.gameOver;
+          for (x = 0; x < board.length; x++) {
+            for (y = 0; y < board[x].length; y++) {
+              if (board[x][y].class == "clicked") {
+                board[x][y].class = "OPclicked";
+              }
+              if (board[x][y].class == "tile") {
+                board[x][y].class = "OPtile";
+              }
+              if (board[x][y].class == "mine") {
+                board[x][y].class = "OPmine";
+              }
+            }
+          }
+          this.OPtiles = board;
+          if (win) {
+            if (this.activeDifficulty[0].title == "Beginner") {
+              this.gameOverBeginner = true;
+            }
+            if (this.activeDifficulty[0].title == "Intermediate") {
+              this.gameOverIntermediate = true;
+            }
+            if (this.activeDifficulty[0].title == "Hard") {
+              this.gameOverHard = true;
+            }
+            this.gameOverExec(this.activeDifficulty[0]);
+          }
+          if (gameOver) {
+            if (this.activeDifficulty[0].title == "Beginner") {
+              this.winBeginner = true;
+            }
+            if (this.activeDifficulty[0].title == "Intermediate") {
+              this.winIntermediate = true;
+            }
+            if (this.activeDifficulty[0].title == "Hard") {
+              this.winHard = true;
+            }
+            this.winExec();
+          }
         }
       };
     },

@@ -16,6 +16,12 @@
     <div id="app">
         <nav>
             <div class="navigation">
+                <div class="users">
+                    <div class="usersTitle">Players:</div>
+                    <div v-for="user in usernames">
+                        <div class="user">{{user}}</div>
+                    </div>
+                </div>
                 <div class="title"><a href="../../index.html">Bored-Central</a></div>
                 <img class="hotbar_button" @click="toggle_hotbar()" src="img/menu.png" alt="controller">
             </div>
@@ -31,26 +37,76 @@
                 <div><img src='img/flagIcon.svg'></img></div>
                 <div class='data'>{{currentMines}}</div>
             </div>
-            <div class='box'>
+            <div class='box' v-show="restartToggle">
                 <div class="restart" @click="restart(this.activeDifficulty[0])"><img src='img/restart.png'></img></div>
             </div>
-            <div class='box'>
+            <div class='box' v-show="restartToggle">
                 <div><img src='img/stopwatch.svg'></img></div>
                 <div class='data'>{{formatTimer}}</div>
             </div>
         </div>
         <div class="wrapper">
             <div id="board">
-                <div class="column" v-for="col in tiles">
-                    <div class="row" v-for="row in col">
-                        <div
-                        @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),setTimer(),checkWin(this.activeDifficulty[0])"
-                        :class="[row.class, row.color, row.flag, row.difficulty]"
-                        @contextmenu.prevent
-                        @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
-                        >
-                        {{row.number}}
+                <div class="border">
+                    <div class="column" v-for="col in tiles">
+                        <div class="row" v-for="row in col">
+                            <div
+                            @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),setTimer(),checkWin(this.activeDifficulty[0]),serverPlay()"
+                            :class="[row.class, row.color, row.flag, row.difficulty]"
+                            @contextmenu.prevent
+                            @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
+                            >
+                            {{row.number}}
+                            </div>
+                        </div>
                     </div>
+                    <div class="blurBeginner" v-show="winBeginner">
+                        <div class="winBox">
+                            <div class="winning">You Win!</div>
+                        </div>
+                    </div>
+                    <div class="blurBeginner" v-show="gameOverBeginner">
+                        <div class="loseBox">
+                            <div class="lose" >Game Over</div>
+                        </div>
+                    </div>
+                    <div class="blurIntermediate" v-show="winIntermediate">
+                        <div class="winBox">
+                            <div class="winning">You Win!</div>
+                        </div>
+                    </div>
+                    <div class="blurIntermediate" v-show="gameOverIntermediate">
+                        <div class="loseBox">
+                            <div class="lose" >Game Over</div>
+                        </div>
+                    </div>
+                    <div class="blurHard" v-show="winHard">
+                        <div class="winBox">
+                            <div class="winning">You Win!</div>
+                        </div>
+                    </div>
+                    <div class="blurHard" v-show="gameOverHard">
+                        <div class="loseBox">
+                            <div class="lose" >Game Over</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="opponent">
+                    <div class="OPusername" v-show="OPusernameToggle">Opponent: </div>
+                    <div class="OPborder">
+                        <div id="opponentsBoard" v-show="opponentExists">
+                            <div class="OPcolumn" v-for="col in OPtiles">
+                                <div class="OProw" v-for="row in col">
+                                    <div
+                                    :class="[row.class, row.color, row.flag, row.difficulty]"
+                                    @contextmenu.prevent
+                                    @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
+                                    >
+                                    {{row.number}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -85,8 +141,8 @@
 
                             </div>
                             <div>
-                                <a class="descBoxSingleplayerButton descHoverable" @click="SingleplayerSwitch()">Singleplayer</a>
-                                <a class="descBoxMultiplayerButton descHoverable" @click="MultiplayerSwitch()">Multiplayer</a>
+                                <a class="descBoxSingleplayerButton descHoverable" @click="SingleplayerSwitch(),opponentSwitchOff(), gameModeSingle()">Singleplayer</a>
+                                <a class="descBoxMultiplayerButton descHoverable" @click="MultiplayerSwitch(),opponentSwitchOn(),gameModeMulti()">Multiplayer</a>
                             </div>
                         </div>
 
@@ -101,7 +157,7 @@
                 <div class="diffBox" v-show="singleplayerDifficultyPage">
                     <div class="diffContentBox">
                         <p class="titleDiff">Difficulty:</p>
-                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0])">Beginner</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0]),OPgenerateBoard(this.activeDifficulty[0])">Beginner</a>
                         <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0])">Intermediate</a>
                         <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0])">Hard</a>
                     </div>
@@ -112,9 +168,17 @@
                 <div class="diffBox" v-show="multiplayerDifficultyPage">
                     <div class="diffContentBox">
                         <p class="titleDiff">Difficulty:</p>
-                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Beginner</a>
-                        <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Intermediate</a>
-                        <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),generateBoard(this.activeDifficulty[0]),createServer(),joinServerOnCreation()">Hard</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoBeginner(),createServer(),joinServerOnCreation()">Beginner</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoIntermediate(),createServer(),joinServerOnCreation()">Intermediate</a>
+                        <a class="diff" @click="difficultySwitch(),changeDifficultytoHard(),createServer(),joinServerOnCreation()">Hard</a>
+                    </div>
+                </div>
+
+                <!-- multiplayer waiting page -->
+
+                <div class="waitPage" v-show="standby">
+                    <div class="waitContentBox">
+                        <p class="wait">Waiting for opponent...</p>
                     </div>
                 </div>
 
@@ -159,37 +223,6 @@
                 </div>
 
                 <!-- ----------- -->
-
-                <div class="blurBeginner" v-show="winBeginner">
-                    <div class="winBox">
-                        <div class="winning">You Win!</div>
-                    </div>
-                </div>
-                <div class="blurBeginner" v-show="gameOverBeginner">
-                    <div class="loseBox">
-                        <div class="lose" >Game Over</div>
-                    </div>
-                </div>
-                <div class="blurIntermediate" v-show="winIntermediate">
-                    <div class="winBox">
-                        <div class="winning">You Win!</div>
-                    </div>
-                </div>
-                <div class="blurIntermediate" v-show="gameOverIntermediate">
-                    <div class="loseBox">
-                        <div class="lose" >Game Over</div>
-                    </div>
-                </div>
-                <div class="blurHard" v-show="winHard">
-                    <div class="winBox">
-                        <div class="winning">You Win!</div>
-                    </div>
-                </div>
-                <div class="blurHard" v-show="gameOverHard">
-                    <div class="loseBox">
-                        <div class="lose" >Game Over</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
