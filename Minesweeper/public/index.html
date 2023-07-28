@@ -16,19 +16,15 @@
     <div id="app">
         <nav>
             <div class="navigation">
-                <div class="users">
-                    <div class="usersTitle">Players:</div>
-                    <div v-for="user in usernames">
-                        <div class="user">{{user}}</div>
-                    </div>
-                </div>
                 <div class="title"><a href="../../index.html">Bored-Central</a></div>
                 <img class="hotbar_button" @click="toggle_hotbar()" src="img/menu.png" alt="controller">
             </div>
             <div class="hotbar" v-show="hotbarOn">
                 <div class='hotbar_top'>
-                    <input class="hotbar_search"></input>
                     <div @click='hotbarOff()' class="exit_hotbar">X</div>
+                </div>
+                <div>
+                    <a href="" class="refresh">Change Difficulty</a>
                 </div>
             </div>
         </nav>
@@ -47,14 +43,20 @@
         </div>
         <div class="wrapper">
             <div id="board">
+                <div class="users" v-show="playersToggle">
+                    <div class="usersTitle">Players:</div>
+                    <div v-for="user in usernames">
+                        <div class="user">{{user}}</div>
+                    </div>
+                </div>
                 <div class="border">
                     <div class="column" v-for="col in tiles">
                         <div class="row" v-for="row in col">
                             <div
-                            @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),setTimer(),checkWin(this.activeDifficulty[0]),serverPlay()"
+                            @click="generateMines(row, this.activeDifficulty[0]), tile_click(row, this.activeDifficulty[0]),startTimer(),checkWin(this.activeDifficulty[0]),serverPlay()"
                             :class="[row.class, row.color, row.flag, row.difficulty]"
                             @contextmenu.prevent
-                            @click.right="flag(row), checkWin(this.activeDifficulty[0]) "
+                            @click.right="flag(row), checkWin(this.activeDifficulty[0])"
                             >
                             {{row.number}}
                             </div>

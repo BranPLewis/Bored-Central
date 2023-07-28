@@ -42,6 +42,7 @@ Vue.createApp({
       restartToggle: true,
       OPusernameToggle: false,
       standby: false,
+      playersToggle: false,
       socket: null,
       mines: [],
       tiles: [],
@@ -61,12 +62,14 @@ Vue.createApp({
       this.opponentExists = false;
       this.restartToggle = true;
       this.OPusernameToggle = false;
+      this.playersToggle = false;
     },
 
     opponentSwitchOn: function () {
       this.opponentExists = true;
       this.restartToggle = false;
       this.OPusernameToggle = true;
+      this.playersToggle = true;
     },
 
     SingleplayerSwitch: function () {
@@ -173,7 +176,9 @@ Vue.createApp({
       }
     },
 
-    winExec: function () {},
+    winExec: function () {
+      this.stopTimer();
+    },
 
     tile_click: function (row, difficulty) {
       if (this.gameOver == false && this.win == false) {
@@ -469,7 +474,7 @@ Vue.createApp({
     },
 
     gameOverExec: function () {
-      this.timer = false;
+      this.stopTimer();
       for (i = 0; i < this.mines.length; i++) {
         this.tiles[this.mines[i].col][this.mines[i].row].class = "mine";
       }
@@ -478,7 +483,6 @@ Vue.createApp({
     restart(difficulty) {
       var diff = difficulty;
       this.restarted = true;
-      this.setTimer();
       this.currentMines = this.activeDifficulty[0].mines;
       this.win = false;
       this.winBeginner = false;
@@ -491,6 +495,15 @@ Vue.createApp({
       this.tiles = [];
       this.mines = [];
       this.generateBoard(this.activeDifficulty[0]);
+
+      this.timer = setTimeout(() => {
+        this.seconds = 0;
+        this.minutes = 0;
+      });
+
+      this.timer = false;
+
+      this.setTimer();
     },
 
     toggle_hotbar: function () {
@@ -499,41 +512,43 @@ Vue.createApp({
     hotbarOff: function () {
       this.hotbarOn = false;
     },
+
     setTimer() {
-      if (this.timer) {
-        if (this.restarted == true) {
-          setTimeout(() => {
-            this.seconds = 0;
-            this.minutes = 0;
-          }, 100);
-          clearInterval(gametime);
-          this.timer = false;
-        }
-        if (this.gameOver == true) {
-          clearInterval(gametime);
-          this.timer = false;
-        }
-        if (this.win) {
-          clearInterval(gametime);
-          this.timer = false;
-        }
-      } else {
-        this.timer = true;
-        var gametime = setInterval(() => {
+      if (this.timer == true) {
+        this.gametime = setInterval(() => {
           if (this.seconds < 59) {
             this.seconds++;
           } else {
             this.seconds = 0;
             this.minutes++;
           }
-        }, 1100);
+        }, 1000);
+      } else {
+        if (this.restarted == true) {
+          this.stopTimer();
+          this.timer = false;
+        }
+        if (this.gameOver == true) {
+          this.stopTimer();
+          this.timer = false;
+        }
+        if (this.win) {
+          this.stopTimer();
+          this.timer = false;
+        }
       }
     },
+
     startTimer() {
       if (this.timer == false) {
-        this.setTimer();
         this.timer = true;
+
+        this.setTimer();
       }
+    },
+    stopTimer() {
+      clearInterval(this.gametime);
+      clearInterval(this.timer);
     },
 
     serverPlay: function () {
